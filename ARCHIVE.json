@@ -1,0 +1,15 @@
+{
+  "name": "pdf-seitenweise-sichten",
+  "version": "1.0.0",
+  "date": "2026-10-12",
+  "owner": "Sae-l",
+  "source": "Installed Codex skill, created in the Formelsammlung project",
+  "skill_sha256": "4012c86a75c9f093dadc90bae4f14870a638e868507c5bb9a1536d0793a4736b",
+  "checks": {
+    "formal_validation": "PASS",
+    "installed_copy_byte_equality": "PASS",
+    "observed_workflow": "P2 PDF page 9 and eight selected pages in five example documents",
+    "independent_comprehensive_behavior_test": "NOT_PERFORMED",
+    "complete_formula_verification": "NOT_PERFORMED"
+  }
+}
