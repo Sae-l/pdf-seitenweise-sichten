@@ -1,6 +1,6 @@
 {
   "name": "pdf-seitenweise-sichten",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "date": "2026-10-12",
   "owner": "Sae-l",
   "source": "Installed Codex skill, created in the Formelsammlung project",
@@ -10,6 +10,7 @@
     "installed_copy_byte_equality": "PASS",
     "observed_workflow": "P2 PDF page 9 and eight selected pages in five example documents",
     "independent_comprehensive_behavior_test": "NOT_PERFORMED",
-    "complete_formula_verification": "NOT_PERFORMED"
+    "complete_formula_verification": "NOT_PERFORMED",
+    "archive_line_endings": "Automatic Git text conversion disabled via .gitattributes"
   }
 }
