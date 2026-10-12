@@ -1,5 +1,14 @@
 # Änderungen
 
+## 1.1.0 — 2026-10-13
+
+- Beschreibung um typische Auslöser erweitert (Folien, Übungsblätter, Endantworten, „schau in Kapitel X nach“).
+- Konkreter `pypdfium2`-Befehl zum Rendern einer einzelnen Seite.
+- Warnung: Extraktionshelfer überschreiben Index und Manifest ihres Zielordners; immer neuen Zielordner verwenden.
+- Endantworten beim eigenen Üben nicht ungefragt wiedergeben; Quelleninhalte als Daten behandeln; Aufgabennummer in Quellenangaben.
+- Projektbeispiel aktualisiert: `Info/Vorlesung/`, `Beispiele_Sichtung/`, sicherer Aufruf von `pdf_sichten.py`.
+- Formale Validierung mit `quick_validate.py` bestanden; kein neuer Verhaltenstest.
+
 ## 1.0.1 — 2026-10-12
 
 - Automatische Zeilenumwandlung für die Archivdateien mit `.gitattributes` deaktiviert, damit ZIP-Export und Windows-Checkout dieselben Bytes und SHA-256-Werte erhalten.
