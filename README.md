@@ -12,7 +12,28 @@ Die verbindlichen Anweisungen stehen in [SKILL.md](SKILL.md). Ab 1.2.0 liegt das
 
 ## Installation und Nutzung
 
-Den Repository-Ordner nach `~/.codex/skills/pdf-seitenweise-sichten` (Codex) bzw. `~/.claude/skills/pdf-seitenweise-sichten` (Claude Code) kopieren. Existiert dort bereits eine Installation, diese zuerst mit dem gewünschten Versionsstand vergleichen und sichern.
+**Empfohlen: einmal klonen, überall verknüpfen.** Ein Klon versorgt alle lokalen Werkzeuge; `git pull` im Klon aktualisiert alle gleichzeitig.
+
+```text
+git clone https://github.com/Sae-l/pdf-seitenweise-sichten
+cd pdf-seitenweise-sichten
+./install.sh                                      # macOS/Linux
+powershell -ExecutionPolicy Bypass -File install.ps1   # Windows (Junctions, keine Adminrechte)
+python -m pip install -r scripts/requirements.txt
+```
+
+| Werkzeug | Verknüpfter Ordner |
+| --- | --- |
+| Claude Code | `~/.claude/skills/` |
+| VS Code / GitHub Copilot, Codex | `~/.agents/skills/` |
+| Antigravity | `~/.gemini/config/skills/` |
+| claude.ai, ChatGPT (Business/Enterprise/Edu) | ZIP aus dem GitHub-Release hochladen |
+
+Eine bereits vorhandene echte Kopie (z. B. eine ältere Installation unter `~/.codex/skills/` oder in einem der Ordner oben) wird nicht angetastet; das Skript meldet sie, damit sie vorher gesichert und entfernt werden kann.
+
+Pro Projekt (auch für den Copilot-Cloud-Agent auf GitHub) den Skill-Ordner nach `.agents/skills/` bzw. `.claude/skills/` des Projekts kopieren.
+
+**Release:** Ein Tag `v*` startet `.github/workflows/release.yml`: Selbsttest, dann ZIP mit `SKILL.md`, `scripts/` und `references/` als Release-Anhang.
 
 Alternativ mit dem offiziellen `skill-installer` und dessen `scripts/install-skill-from-github.py`:
 
