@@ -8,6 +8,8 @@ Ein Agent-Skill mit lokalem Python-Werkzeug für Vorlesungsfolien, Übungsblätt
 
 [Schnellstart](#schnellstart) · [Als Skill nutzen](#als-skill-nutzen) · [Prüfstand](#prüfstand) · [Änderungen](CHANGELOG.md) · [MIT-Lizenz](LICENSE)
 
+**Version 1.3.1:** [Release und Skill-ZIP](https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.3.1) · [Release-Hinweise](docs/releases/v1.3.1.md)
+
 ## Was du bekommst
 
 | Nutzen | Umsetzung |
@@ -119,9 +121,12 @@ Die Tests erzeugen eigene kleine PDF-Dateien in einem temporären Verzeichnis; f
 | [scripts/](scripts/) | CLI, Abhängigkeiten und Selbsttest |
 | [Projektbeispiel](references/beispiel-formelsammlung.md) | Zuordnung von Quellen und Sichtungsordnern |
 | [Plan und Nachweise](Obsidian-Plan/00%20Start.md) | Entscheidungen, Messungen und offene Schritte; auch direkt auf GitHub lesbar |
-| [CHANGELOG.md](CHANGELOG.md) | Versionen und unveröffentlichte Änderungen |
+| [Repository-Konfiguration](docs/repository-konfiguration.md) | Schutzregeln, CI-Berechtigungen und Release-Prüfweg |
+| [CHANGELOG.md](CHANGELOG.md) | Änderungen je Version |
 
-Dieser Entwicklungsstand basiert auf v1.3.0; die anschließenden Änderungen stehen im Changelog unter „Unveröffentlicht“. Der zuletzt getaggte Stand ist v1.1.0. Ein fertiger Release-Anhang für v1.3.0 ist noch nicht vorhanden. Die [Release-Action](.github/workflows/release.yml) baut bei einem neuen Versions-Tag nach bestandenem Selbsttest ein ZIP; die Ausführung und das Ergebnis müssen anschließend geprüft werden.
+Version 1.3.1 umfasst die Verbesserungen aus v1.3.0 sowie die anschließenden Korrekturen und den neuen Besucher-Einstieg. Für eine festgelegte Installation `v1.3.1` auschecken. Die [Release-Action](.github/workflows/release.yml) prüft Selbsttest, Vault, Repository-Prüfsummen und Tag-Version, baut ein Skill-ZIP und legt einen Release-Entwurf an. Nach Download und Vergleich mit dem getaggten Quellstand wird dieser veröffentlicht.
+
+Im Release liegen das Skill-ZIP und eine separate `SHA256SUMS` für dessen Download. Die gleichnamige Datei im Repository prüft dagegen die darin aufgeführten Quelldateien. Der ZIP-Inhalt ist für die Skill-Installation gedacht; Dokumentation und Installationsskripte stehen im vollständigen Repository. Eine ZIP-Datei bestätigt noch keine Kompatibilität mit jeder Agent-Oberfläche.
 
 Fehler oder Verbesserungen? Eröffne ein [Issue](https://github.com/Sae-l/pdf-seitenweise-sichten/issues) mit Befehl, Betriebssystem, Python-Version und beobachtetem Ergebnis. Für PDF-Probleme möglichst eine kleine, selbst erstellte Beispieldatei verwenden. Änderungen am Verhalten bitte mit einem passenden Selbsttest und Changelog-Eintrag einreichen.
 

@@ -1,19 +1,19 @@
 {
   "name": "pdf-seitenweise-sichten",
-  "version": "1.3.0+unreleased",
+  "version": "1.3.1",
   "date": "2026-10-22",
   "owner": "Sae-l",
   "source": "Installed Codex skill, created in the Formelsammlung project",
   "skill_sha256": "d3c86aeb59d47af99fb59fc8d50229f2fe753e5b91efaed1051deb63ce708a35",
   "checks": {
     "formal_validation": "PASS (quick_validate.py, current worktree, 2026-10-22)",
-    "installed_copy_byte_equality": "NOT_YET (current worktree not installed)",
+    "installed_copy_byte_equality": "NOT_PERFORMED (release does not modify local skill installations)",
     "observed_workflow": "P2 PDF page 9 and eight selected pages in five example documents",
     "independent_comprehensive_behavior_test": "NOT_PERFORMED",
     "complete_formula_verification": "NOT_PERFORMED",
     "archive_line_endings": "Automatic Git text conversion disabled via .gitattributes",
     "bundled_script_selftest": "PASS (2026-10-22; synthetic regression tests incl. missing hash, new/deleted PDFs, page sequence, missing Markdown, empty source and manifest protection)",
     "real_document_test_1_3_0": "PASS (CuD Referenz 6 PDFs/83 S. via Obsidian-Plan/Pruefung/messen.py; Fersch 244 S. + FOSA 40 S. extract)",
-    "real_document_test_current_worktree": "NOT_PERFORMED (real_document_test_1_3_0 describes the earlier main version)"
+    "real_document_test_current_worktree": "NOT_PERFORMED (real_document_test_1_3_0 describes the earlier version)"
   }
 }

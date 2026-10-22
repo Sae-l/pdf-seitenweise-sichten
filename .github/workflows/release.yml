@@ -5,23 +5,41 @@ on:
     tags: ['v*']
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v4
-      - name: Selbsttest
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - name: Release prüfen
         run: |
-          pip install -r scripts/requirements.txt reportlab
+          python -m pip install -r scripts/requirements.txt reportlab
           python scripts/selbsttest.py
-      - name: ZIP für claude.ai / ChatGPT bauen
+          python Obsidian-Plan/Pruefung/vault_pruefen.py
+          sha256sum -c SHA256SUMS
+          test -f "docs/releases/${GITHUB_REF_NAME}.md"
+          python -c 'import json, os; assert "v" + json.load(open("ARCHIVE.json"))["version"] == os.environ["GITHUB_REF_NAME"]'
+      - name: Skill-ZIP und Prüfsumme bauen
         run: |
-          mkdir -p dist/pdf-seitenweise-sichten
-          cp -r SKILL.md LICENSE scripts references dist/pdf-seitenweise-sichten/
-          cd dist && zip -r "pdf-seitenweise-sichten-${GITHUB_REF_NAME}.zip" pdf-seitenweise-sichten
-      - name: Release anlegen
+          mkdir -p dist
+          git archive --format=zip --prefix=pdf-seitenweise-sichten/ \
+            --output="dist/pdf-seitenweise-sichten-${GITHUB_REF_NAME}.zip" \
+            "$GITHUB_SHA" SKILL.md LICENSE scripts references ARCHIVE.json
+          cd dist && sha256sum *.zip > SHA256SUMS
+      - name: Release-Entwurf anlegen
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" dist/*.zip --title "$GITHUB_REF_NAME" --notes "Siehe CHANGELOG.md. ZIP direkt in claude.ai oder ChatGPT hochladen."
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/*.zip dist/SHA256SUMS \
+            --verify-tag --draft --title "$GITHUB_REF_NAME · PDF-Unterlagen gezielt sichten" \
+            --notes-file "docs/releases/${GITHUB_REF_NAME}.md"

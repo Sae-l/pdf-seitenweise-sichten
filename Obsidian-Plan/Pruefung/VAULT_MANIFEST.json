@@ -4,8 +4,8 @@
   "files": [
     {
       "path": "00 Start.md",
-      "bytes": 1511,
-      "sha256": "7a0968c85f4b018d315e26f6b80c9e1c8441c7a110dbec7d3befad2d744625eb"
+      "bytes": 1625,
+      "sha256": "64b3297bf8c250c4edd0f634bafaf74af4545d8bae833c8fd93776ffa009a3c4"
     },
     {
       "path": "10 Ziel und Erfolgskriterien.md",
@@ -19,8 +19,8 @@
     },
     {
       "path": "30 Plan v1.3.0.md",
-      "bytes": 2952,
-      "sha256": "6964d1c9af552eac7ac4a9c149172461be2d9889e7ef3e18e2643043d3ae7075"
+      "bytes": 3078,
+      "sha256": "7e5cba81511b23d64d0c35d1bd43091a2db581e2343481e3ac669e8f7075b9e6"
     },
     {
       "path": "31 Plattformen und Installation.md",
