@@ -1,0 +1,56 @@
+{
+  "format": 1,
+  "date": "2026-10-22",
+  "files": [
+    {
+      "path": "00 Start.md",
+      "bytes": 1403,
+      "sha256": "53dd643af23c553190aab701a2abb0136a80c345ec4ffcd698d4f1b345f879ec"
+    },
+    {
+      "path": "10 Ziel und Erfolgskriterien.md",
+      "bytes": 1594,
+      "sha256": "d077b6faff8814c10a625da585530b86f848d34001c4361e439a34ded08d64d8"
+    },
+    {
+      "path": "20 Ist-Stand und Messung.md",
+      "bytes": 1974,
+      "sha256": "910bda4d3cc278d1a936eee5de3725fa47b7a2cce72fa35c8490a4e338c32693"
+    },
+    {
+      "path": "30 Plan v1.3.0.md",
+      "bytes": 2132,
+      "sha256": "604826ae2a583470a6a51beab9e53cf2d1d9f691bdfb0f1a97d371ee9b05cd03"
+    },
+    {
+      "path": "31 Plattformen und Installation.md",
+      "bytes": 1641,
+      "sha256": "734e1abbbd6998cab438398ee4f3a077268eea997a7a1eba0a52ee11998533ff"
+    },
+    {
+      "path": "40 Entscheidungen.md",
+      "bytes": 1567,
+      "sha256": "588e6257f9497f6c70c5aad8c9754708239e2a087277c19a7252b4b0f8cf8f47"
+    },
+    {
+      "path": "50 Parkplatz.md",
+      "bytes": 1466,
+      "sha256": "672883fcf2942bd64e9077d959b146b3804c356fa9c02d8049064b881926324c"
+    },
+    {
+      "path": "90 Nachweise/91 Quellen und Prüfwege.md",
+      "bytes": 2112,
+      "sha256": "cc3b4c2a125f6f9098b84a759693131791f2765ad0af7925b6bb66542e5a4c76"
+    },
+    {
+      "path": "Pruefung/messen.py",
+      "bytes": 2841,
+      "sha256": "035ca30eefcb489600969cfb7eaddefdbd7999ff49faba55dc505e16032df4be"
+    },
+    {
+      "path": "Pruefung/vault_pruefen.py",
+      "bytes": 4816,
+      "sha256": "9ec98ccec5ca0e021ec950fe80d9b1388a9078910e3ed251a4fcad4d398093dc"
+    }
+  ]
+}
