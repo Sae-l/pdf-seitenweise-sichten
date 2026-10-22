@@ -5,7 +5,7 @@ type: plan
 language: de
 created: 2026-10-22
 updated: 2026-10-22
-status: offen
+status: in-arbeit
 tags: ["pdf-sichtung", "plan"]
 ---
 
@@ -15,22 +15,23 @@ Ziel und Kriterien: [[10 Ziel und Erfolgskriterien]]. Ausgangslage: [[20 Ist-Sta
 
 ## Jetzt nötig
 
-- [ ] **1. Alten Helfer ins Repo bringen** (ca. 2 min, Saeed)
+- [x] **1. Alten Helfer ins Repo bringen** (ca. 2 min, Saeed)
   - Was: `D:\Saeed\Projekts\Formelsammlung\pdf_sichten.py` hochladen oder pushen.
   - Warum: Er ist am CuD-Satz nachweislich besser (E1–E4).
   - Fertig wenn: Datei liegt unverändert im Repo, SHA-256 notiert.
-- [ ] **2. Zusammenführen** (ca. 20 min, Claude)
+- [x] **2. Zusammenführen** (ca. 20 min, Claude)
   - Was: alter Helfer als `scripts/sichtung.py`; aus v1.2.0 übernehmen: `check`, Abbruch statt Überschreiben, `render`.
   - Warum: eine Pipeline statt zwei.
   - Fertig wenn: Selbsttest grün (E5).
-- [ ] **3. `messen.py` und Selbsttest anpassen** (ca. 10 min, Claude)
+- [x] **3. `messen.py` und Selbsttest anpassen** (ca. 10 min, Claude)
   - Was: neuen Indexaufbau einlesen; Testfall für Duplikat und Titel ergänzen.
   - Fertig wenn: beide Skripte laufen ohne Fehler.
-- [ ] **4. Gegenprüfung an CuD** (ca. 5 min, Claude)
+- [x] **4. Gegenprüfung an CuD** (ca. 5 min, Claude)
   - Was: `messen.py` gegen CuD-Klon.
   - Fertig wenn: E1–E3 erfüllt; Ergebnis in [[20 Ist-Stand und Messung]] ergänzt.
 - [ ] **5. Pull Request, Squash-Merge, Tag `v1.3.0`** (ca. 5 min, Saeed)
   - Fertig wenn: Release enthält ZIP; Action grün.
+  - Danach: Skill in CuD einsetzen, siehe Karte unten.
 - [ ] **6. Lokal installieren und testen** (ca. 10 min, Saeed)
   - Was: `install.ps1`, dann ein Testauftrag je genutztem Werkzeug.
   - Fertig wenn: E6 erfüllt, Ergebnis in [[31 Plattformen und Installation]] vermerkt.
@@ -44,5 +45,13 @@ Ziel und Kriterien: [[10 Ziel und Erfolgskriterien]]. Ausgangslage: [[20 Ist-Sta
 
 - [ ] ECC-Tools-App für dieses Repo entfernen (Kommentare ohne Prüfung, siehe [[40 Entscheidungen]]).
 
+> [!info] Stand 22.10.2026
+> Schritte 1–4 erledigt (Helfer von `D:` geholt, zusammengeführt, Messung am CuD-Satz: E1–E5 erfüllt). Offen: Merge mit Tag `v1.3.0`, lokale Installation.
+
 > [!tip] Stoppregel
 > Nach Schritt 6 mit E1–E6 erfüllt: fertig. Keine weiteren Stufen ohne konkreten Anlass.
+
+## Danach
+
+- Einsatz in CuD (vorhandene `Referenz_Sichtung` bleibt; neue Vorlesungen mit `--alt` ergänzen).
+- Weiterentwicklung über v1.3.0 hinaus: Karte [PDF-Pipeline über v1.3.0 hinaus](https://github.com/Sae-l/pdf-seitenweise-sichten/issues/3).

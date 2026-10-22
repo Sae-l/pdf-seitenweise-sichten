@@ -19,13 +19,15 @@ Fehlende automatische Warnungen beweisen keine korrekte Formel. Ein erzeugtes Bi
 
 | Aufruf | Wirkung |
 | --- | --- |
-| `sichtung.py extract <pdf-oder-ordner> <neuer-ordner>` | Erzeugt `Seitenindex.md`, je PDF ein Markdown mit `## PDF-Seite N` und `manifest.json` (Pfad, Seitenzahl, SHA-256). Bricht ab, wenn im Ziel schon ein Index liegt. |
+| `sichtung.py extract <pdf-ordner> <neuer-ordner> [--alt <alter-ordner>] [--titel "…"]` | Erzeugt `Seitenindex.md`, `manifest.json`, `md/<pdf>.md` mit `## PDF-Seite N` und `bilder/<pdf>-S###.png` für Seiten mit wenig oder beschädigtem Text. Byte-identische PDFs werden nur einmal indiziert. Bricht ab, wenn im Ziel schon ein Index liegt. `--alt` übernimmt Prüfstatus und bereits angesehene Bilder eines früheren Sichtungsordners, aber nur für unveränderte PDFs. |
 | `sichtung.py check <ordner>` | Prüft Abschnitte gegen Seitenzahl und meldet `VERALTET`, wenn sich ein PDF seit der Extraktion geändert hat. |
 | `sichtung.py render <pdf> <N> <arbeitsordner> [--scale 3]` | Rendert nur PDF-Seite N als PNG. |
 
-Index-Schema (eine Zeile pro PDF-Seite): `| Dokument | PDF-S. | Titel (erste Zeile) | Zeichen | Flags |`. Flags werden heuristisch gesetzt: `[wenig Text]` unter 20 Zeichen, `[Zeichen prüfen]` bei Formelzeichen, `[Endantworten-Abschnitt]` bei Zeilen wie „Lösung“ oder „Ergebnis“.
+Index: je PDF eine Überschrift mit Link zum Markdown, darunter eine Zeile pro Seite `- S. N: <Titel> [Flags]`. Der Titel sind die ersten aussagekräftigen Zeilen; Kopf-/Fußzeilen, die auf mindestens der Hälfte der Seiten stehen, und reine Seitenzahlen werden übersprungen. Flags: `[wenig Text]` (unter 80 Zeichen, meist Scan oder Abbildung), `[Zeichen prüfen]` (Ersatz- oder Privatzeichen in der Extraktion), `[Aufgabe/Beispiel]`, `[Endantworten-Abschnitt]` (ab der Zeile „Endantworten:“).
 
-Bei vorhandenem Index mit `manifest.json` zuerst `check` ausführen; ein veralteter Index wird in einen neuen Ordner neu extrahiert und erst nach Vergleich übernommen.
+`manifest.json` führt je Seite `text_read`, `original_image_viewed` und `subject_review`. Diese Felder nach jeder Sichtung aktualisieren; sie sind der Nachweis, was tatsächlich gelesen oder angesehen wurde.
+
+Bei vorhandenem Index zuerst `check` ausführen. Ein veralteter Index oder neue PDFs im Ordner: in einen neuen Ordner mit `--alt <bisheriger Ordner>` extrahieren, vergleichen, dann übernehmen.
 
 ## Einzelne Seite rendern
 

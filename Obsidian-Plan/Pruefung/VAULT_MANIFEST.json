@@ -4,8 +4,8 @@
   "files": [
     {
       "path": "00 Start.md",
-      "bytes": 1403,
-      "sha256": "53dd643af23c553190aab701a2abb0136a80c345ec4ffcd698d4f1b345f879ec"
+      "bytes": 1421,
+      "sha256": "ca4a0de03519a1ddf67855c4026e80e3a0bd1154b17a733ddacac1bab9a39bf6"
     },
     {
       "path": "10 Ziel und Erfolgskriterien.md",
@@ -14,13 +14,13 @@
     },
     {
       "path": "20 Ist-Stand und Messung.md",
-      "bytes": 1974,
-      "sha256": "910bda4d3cc278d1a936eee5de3725fa47b7a2cce72fa35c8490a4e338c32693"
+      "bytes": 2874,
+      "sha256": "49225573ea758a02b4f996eb994b9932672c06356ce8315c9fe1acd59fae5712"
     },
     {
       "path": "30 Plan v1.3.0.md",
-      "bytes": 2132,
-      "sha256": "604826ae2a583470a6a51beab9e53cf2d1d9f691bdfb0f1a97d371ee9b05cd03"
+      "bytes": 2632,
+      "sha256": "6fe8ea91d33377f72a3d3a7f890cfa345d9f4588f00832d8c483d3fc7d83697f"
     },
     {
       "path": "31 Plattformen und Installation.md",
@@ -29,8 +29,8 @@
     },
     {
       "path": "40 Entscheidungen.md",
-      "bytes": 1567,
-      "sha256": "588e6257f9497f6c70c5aad8c9754708239e2a087277c19a7252b4b0f8cf8f47"
+      "bytes": 2146,
+      "sha256": "7d6b0fbc2396805eec91527e55124944d37e9adc1977dad720fea5675820e949"
     },
     {
       "path": "50 Parkplatz.md",
@@ -44,8 +44,8 @@
     },
     {
       "path": "Pruefung/messen.py",
-      "bytes": 2841,
-      "sha256": "035ca30eefcb489600969cfb7eaddefdbd7999ff49faba55dc505e16032df4be"
+      "bytes": 2335,
+      "sha256": "04c16ad83138337b20cd0a34a31d2b8d471fb1c849e25c2e2b555c6bb0801d38"
     },
     {
       "path": "Pruefung/vault_pruefen.py",

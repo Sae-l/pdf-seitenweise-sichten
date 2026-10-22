@@ -45,7 +45,7 @@ Alternativ mit dem offiziellen `skill-installer` und dessen `scripts/install-ski
 --repo Sae-l/pdf-seitenweise-sichten --ref v1.2.0 --path . --name pdf-seitenweise-sichten
 ```
 
-Für das private Repository sind passende GitHub-Zugangsdaten erforderlich. Nach der Installation ist die Skill im nächsten Codex-Turn verfügbar. Beispielaufruf:
+Das Repository ist öffentlich; Zugangsdaten sind nicht nötig. Nach der Installation ist die Skill im nächsten Codex-Turn verfügbar. Beispielaufruf:
 
 ```text
 $pdf-seitenweise-sichten Sichte die Unterlagen im angegebenen PDF-Ordner.
@@ -53,7 +53,7 @@ $pdf-seitenweise-sichten Sichte die Unterlagen im angegebenen PDF-Ordner.
 
 ## Herkunft und Stand
 
-Erstellt am 12.10.2026 aus dem ausdrücklich gewünschten Workflow im Projekt Formelsammlung. Version 1.1.0 glich die Skill an den Projektstand an, 1.2.0 bündelt das Extraktionswerkzeug (siehe Changelog); ältere Stände bleiben über Git-Tags erhalten. [CHANGELOG.md](CHANGELOG.md) beschreibt diesen Stand; [ARCHIVE.json](ARCHIVE.json) enthält die SHA-256-Prüfsumme der Skill und den dokumentierten Prüfstand.
+Erstellt am 12.10.2026 aus dem ausdrücklich gewünschten Workflow im Projekt Formelsammlung. Version 1.1.0 glich die Skill an den Projektstand an, 1.2.0 bündelte ein Extraktionswerkzeug, 1.3.0 ersetzt es durch den bewährten Projekt-Helfer mit Duplikaterkennung und Übernahme der Prüfnachweise (siehe Changelog); ältere Stände bleiben über Git-Tags erhalten. [CHANGELOG.md](CHANGELOG.md) beschreibt diesen Stand; [ARCHIVE.json](ARCHIVE.json) enthält die SHA-256-Prüfsumme der Skill und den dokumentierten Prüfstand.
 
 Die formale Skill-Validierung wurde ausgeführt. Der Ablauf wurde an P2, PDF-Seite 9, und an acht ausgewählten Seiten aus fünf Beispielsammlungen angewendet. Bei einer FOSA-Seite war der extrahierte Text leer; die Originalbildsichtung war deshalb erforderlich.
 

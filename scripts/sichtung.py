@@ -1,23 +1,25 @@
 #!/usr/bin/env python3
-"""Seitenindex.md + Markdown je PDF-Seite erzeugen, Index-Aktualität prüfen, einzelne Seiten rendern.
+"""PDF-Text lokal speichern; im Chat genügt der knappe Seitenindex.
 
-  sichtung.py extract <pdf-datei-oder-ordner> <neuer-ausgabeordner>
+  sichtung.py extract <pdf-ordner> <neuer-ausgabeordner> [--alt <alter-sichtungsordner>] [--titel "<Überschrift>"]
   sichtung.py check   <ausgabeordner>
   sichtung.py render  <pdf-datei> <seite> <ausgabeordner> [--scale 2]
 
-Benötigt: pypdfium2 (pip install pypdfium2). Originale werden nur gelesen.
+Ausgabe (gleiches Layout wie der bisherige Projekt-Helfer):
+  Seitenindex.md, manifest.json, md/<pdf>.md mit "## PDF-Seite N", bilder/<pdf>-S###.png
+Benötigt: pypdfium2. Originale werden nur gelesen.
 """
-import argparse, hashlib, json, re, sys
 from pathlib import Path
+import argparse, collections, hashlib, json, os, re, sys
+from urllib.parse import quote
 
 try:
     import pypdfium2 as pdfium
 except ImportError:
-    sys.exit("pypdfium2 fehlt: pip install pypdfium2")
+    sys.exit("pypdfium2 fehlt: python -m pip install pypdfium2")
 
-WENIG_TEXT = 20  # Zeichen; darunter vermutlich Scan oder reine Abbildung (Titelfolien liegen meist darüber)
-# Zeichen, bei denen die Textextraktion Formeln häufig verfälscht
-FORMEL_ZEICHEN = re.compile(r"[∑∫√∂∇≈≤≥±×·⋅→⃗²³⁻¹₀-₉αβγδεηθλμνπρστφωΩΔ]|\^|_\{")
+STATUS = dict(text_read=False, original_image_viewed=False, subject_review="offen")
+SEITENZAHL = re.compile(r"^(Seite \d+( von \d+)?|\d+( / \d+)?|©.*)$")
 
 
 def sha256(path):
@@ -28,75 +30,113 @@ def sha256(path):
     return h.hexdigest()
 
 
-def pdfs(quelle):
-    q = Path(quelle)
-    return sorted(q.rglob("*.pdf")) if q.is_dir() else [q]
+def alte_pruefungen(ordner):
+    """Prüfstatus aus früheren manifest.json-Dateien, Schlüssel (PDF-Name, Seite)."""
+    alt = {}
+    for manifest in Path(ordner).rglob("manifest.json"):
+        daten = json.loads(manifest.read_text(encoding="utf-8"))
+        for doc in daten if isinstance(daten, list) else []:
+            for seite in doc.get("page_index", []):
+                bild = manifest.parent / seite["image"] if seite.get("image") else None
+                alt[(Path(doc["pdf"]).name, seite["page"])] = (doc.get("sha256"), {k: seite[k] for k in STATUS if k in seite}, bild)
+    return alt
 
 
-def titel(text):
-    for zeile in text.splitlines():
-        z = zeile.strip()
-        if len(z) >= 3:
-            return z[:70].replace("|", "/")
-    return ""
-
-
-def flags(text):
-    f = []
-    if len(text.strip()) < WENIG_TEXT:
-        f.append("[wenig Text]")
-    if FORMEL_ZEICHEN.search(text):
-        f.append("[Zeichen prüfen]")
-    if re.search(r"(?im)^\s*(endergebnis|lösung|ergebnisse?|antworten?)\b", text):
-        f.append("[Endantworten-Abschnitt]")
-    return " ".join(f)
-
-
-def extract(quelle, ziel):
-    ziel = Path(ziel)
+def extract(quelle, ziel, alt_ordner=None, ueberschrift=None):
+    quelle, ziel = Path(quelle), Path(ziel)
     if (ziel / "Seitenindex.md").exists():
-        sys.exit(f"{ziel}/Seitenindex.md existiert bereits. Neuen Ausgabeordner wählen; "
-                 "Ergebnisse erst nach Vergleich übernehmen.")
-    ziel.mkdir(parents=True, exist_ok=True)
-    zeilen = ["# Seitenindex", "",
-              "| Dokument | PDF-S. | Titel (erste Zeile) | Zeichen | Flags |",
-              "| --- | ---: | --- | ---: | --- |"]
-    manifest = {"version": 1, "dokumente": []}
-    for pdf in pdfs(quelle):
-        doc = pdfium.PdfDocument(str(pdf))
-        md_name = pdf.stem + ".md"
-        teile = [f"# {pdf.name}", ""]
-        for n in range(1, len(doc) + 1):
-            text = doc[n - 1].get_textpage().get_text_range().replace("\r", "")
-            teile += [f"## PDF-Seite {n}", "", text.strip(), ""]
-            zeilen.append(f"| [{pdf.name}]({md_name}#pdf-seite-{n}) | {n} | {titel(text)} "
-                          f"| {len(text.strip())} | {flags(text)} |")
-        (ziel / md_name).write_text("\n".join(teile), encoding="utf-8")
-        manifest["dokumente"].append({"pdf": str(pdf.resolve()), "markdown": md_name,
-                                      "seiten": len(doc), "sha256": sha256(pdf)})
-        doc.close()
-    (ziel / "Seitenindex.md").write_text("\n".join(zeilen) + "\n", encoding="utf-8")
-    (ziel / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2),
-                                        encoding="utf-8")
-    fehler = check(ziel)
-    print(f"{len(manifest['dokumente'])} PDF(s) → {ziel}" + ("" if not fehler else " (mit Fehlern)"))
-    return fehler
+        sys.exit(f"{ziel / 'Seitenindex.md'} existiert bereits. Neuen Ausgabeordner wählen und erst nach Vergleich übernehmen.")
+    (ziel / "md").mkdir(parents=True, exist_ok=True)
+    (ziel / "bilder").mkdir(exist_ok=True)
+    alt = alte_pruefungen(alt_ordner) if alt_ordner else {}
+    records, gesehen, uebernommen = [], {}, 0
+    index = [f"# {ueberschrift or 'Seitenindex: ' + quelle.name}", "",
+             "Maschinelle Textextraktion zum Suchen. Formeln, Tabellen und Zeichnungen am Original prüfen.", ""]
+    for source in sorted(quelle.glob("*.pdf")):
+        hashwert = sha256(source)
+        if hashwert in gesehen:
+            index += [f"## {source.stem}", f"Byte-identisch mit {gesehen[hashwert]}; nicht erneut indiziert.", ""]
+            records.append(dict(pdf=source.name, sha256=hashwert, duplicate_of=gesehen[hashwert]))
+            continue
+        gesehen[hashwert] = source.name
+        document = pdfium.PdfDocument(source)
+        texte = []
+        for number in range(1, len(document) + 1):
+            textpage = document[number - 1].get_textpage()
+            texte.append(textpage.get_text_range().replace("\r\n", "\n").replace("\r", "\n"))
+            textpage.close()
+        # Zeilen auf mindestens der Hälfte der Seiten sind Kopf-/Fußzeilen und taugen nicht als Titel.
+        zaehler = collections.Counter(z for t in texte for z in {l.strip() for l in t.splitlines() if l.strip()})
+        wiederholt = {z for z, c in zaehler.items() if len(texte) >= 4 and c >= len(texte) / 2}
+        relative_source = Path(os.path.relpath(source, ziel / "md")).as_posix()
+        extracted = [f"# {source.stem}", "", f"Quelle: {relative_source}",
+                     "Die Seitenzahlen unten sind PDF-Seiten, keine behaupteten Foliennummern.", ""]
+        index += [f"## {source.stem} ({len(document)} PDF-Seiten)",
+                  f"[Markdown]({quote('md/' + source.stem + '.md', safe='/')})", ""]
+        pages, answer_start_page = [], None
+        for number, raw in enumerate(texte, 1):
+            lines = [l.strip() for l in raw.splitlines() if l.strip()]
+            meaningful = [l for l in lines if l not in wiederholt and not SEITENZAHL.match(l)]
+            headings = [l for l in meaningful if re.search(r"[A-Za-zÄÖÜäöüß]{4}", l)]
+            preview = " / ".join(headings[:2] or meaningful[:3])[:100].replace("|", "/")
+            thin = len(re.sub(r"\s", "", raw)) < 80
+            damaged = bool(re.search(r"[�-]", raw))
+            tasks = bool(re.search(r"\b(Übung\w*|Aufgabe\w*|Beispiel\w*)\b", raw, re.I))
+            if "Endantworten:" in raw and answer_start_page is None:
+                answer_start_page = number
+            flags = [label for yes, label in [(thin, "wenig Text"), (damaged, "Zeichen prüfen"), (tasks, "Aufgabe/Beispiel")] if yes]
+            if answer_start_page is not None:
+                flags.append("Endantworten-Abschnitt")
+            extracted += [f"## PDF-Seite {number}", "", "```text", raw.strip(), "```", ""]
+            index.append(f"- S. {number}: {preview}" + (" [" + ", ".join(flags) + "]" if flags else ""))
+            image, status = None, dict(STATUS)
+            alt_hash, alt_status, alt_bild = alt.get((source.name, number), (None, None, None))
+            if alt_status is not None and alt_hash in (None, hashwert):  # Status gilt nur für unveränderte PDFs
+                status.update(alt_status)
+                uebernommen += 1
+                if alt_bild and alt_bild.is_file():  # bereits angesehenes Bild hat Vorrang vor neuem Rendern
+                    image = f"bilder/{alt_bild.name}"
+                    (ziel / image).write_bytes(alt_bild.read_bytes())
+            if image is None and (thin or damaged):
+                image = f"bilder/{source.stem}-S{number:03}.png"
+                page = document[number - 1]
+                page.render(scale=1.5).to_pil().save(ziel / image)
+                page.close()
+            pages.append(dict(page=number, characters=len(raw), flags=flags, image=image, **status))
+        target = ziel / "md" / f"{source.stem}.md"
+        target.write_text("\n".join(extracted), encoding="utf-8")
+        records.append(dict(pdf=source.name, sha256=hashwert, pages=len(document),
+                            markdown=f"md/{source.stem}.md", answer_start_page=answer_start_page, page_index=pages))
+        document.close()
+        index.append("")
+    (ziel / "Seitenindex.md").write_text("\n".join(index), encoding="utf-8")
+    (ziel / "manifest.json").write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8")
+    seiten = sum(r.get("pages", 0) for r in records)
+    print(f"{len(records)} PDFs, {seiten} Seiten, {sum(1 for r in records if 'duplicate_of' in r)} Duplikate, "
+          f"{sum(p['image'] is not None for r in records for p in r.get('page_index', []))} Bildfälle, "
+          f"{uebernommen} Prüfstände übernommen.")
+    return check(ziel, quelle)
 
 
-def check(ziel):
-    """Seitenzahl, Abschnittszahl und Hash gegen das Manifest prüfen; gibt Anzahl Probleme zurück."""
+def check(ziel, quelle=None):
+    """Abschnitte gegen Seitenzahl und PDF-Hashes gegen das Manifest prüfen; gibt Anzahl Probleme zurück."""
     ziel = Path(ziel)
-    manifest = json.loads((ziel / "manifest.json").read_text(encoding="utf-8"))
     probleme = 0
-    for d in manifest["dokumente"]:
-        pdf, md = Path(d["pdf"]), ziel / d["markdown"]
-        abschnitte = len(re.findall(r"(?m)^## PDF-Seite \d+$", md.read_text(encoding="utf-8")))
-        if abschnitte != d["seiten"]:
-            print(f"FEHLER {md.name}: {abschnitte} Abschnitte, {d['seiten']} Seiten"); probleme += 1
+    records = json.loads((ziel / "manifest.json").read_text(encoding="utf-8"))
+    for d in records:
+        if "duplicate_of" not in d:
+            md = ziel / d["markdown"]
+            abschnitte = len(re.findall(r"(?m)^## PDF-Seite \d+$", md.read_text(encoding="utf-8")))
+            if abschnitte != d["pages"]:
+                print(f"FEHLER {md.name}: {abschnitte} Abschnitte, {d['pages']} Seiten"); probleme += 1
+            if quelle is None:  # Quellordner aus der "Quelle:"-Zeile des ersten Markdowns ableiten
+                quelle = (md.parent / re.search(r"(?m)^Quelle: (.+)$", md.read_text(encoding="utf-8")).group(1)).parent
+    for d in records:
+        pdf = Path(quelle) / d["pdf"]
         if not pdf.exists():
-            print(f"WARNUNG {pdf}: Original nicht gefunden"); probleme += 1
-        elif sha256(pdf) != d["sha256"]:
-            print(f"VERALTET {pdf.name}: PDF geändert, neu extrahieren"); probleme += 1
+            print(f"WARNUNG {d['pdf']}: Original nicht gefunden"); probleme += 1
+        elif "sha256" in d and sha256(pdf) != d["sha256"]:
+            print(f"VERALTET {d['pdf']}: PDF geändert, neu extrahieren"); probleme += 1
     if not probleme:
         print("OK: Index aktuell, Abschnittszahlen stimmen")
     return probleme
@@ -107,7 +147,7 @@ def render(pdf, seite, ziel, scale):
     doc = pdfium.PdfDocument(str(pdf))
     if not 1 <= seite <= len(doc):
         sys.exit(f"Seite {seite} außerhalb 1–{len(doc)}")
-    out = ziel / f"{Path(pdf).stem}-S{seite}.png"
+    out = ziel / f"{Path(pdf).stem}-S{seite:03}.png"
     doc[seite - 1].render(scale=scale).to_pil().save(out)
     print(out)
 
@@ -116,12 +156,14 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
     e = sub.add_parser("extract"); e.add_argument("quelle"); e.add_argument("ziel")
+    e.add_argument("--alt", help="früherer Sichtungsordner, dessen Prüfstatus übernommen wird")
+    e.add_argument("--titel", help="Überschrift des Seitenindex")
     c = sub.add_parser("check"); c.add_argument("ziel")
     r = sub.add_parser("render"); r.add_argument("pdf"); r.add_argument("seite", type=int)
     r.add_argument("ziel"); r.add_argument("--scale", type=float, default=2)
     a = ap.parse_args()
     if a.cmd == "extract":
-        sys.exit(1 if extract(a.quelle, a.ziel) else 0)
+        sys.exit(1 if extract(a.quelle, a.ziel, a.alt, a.titel) else 0)
     if a.cmd == "check":
         sys.exit(1 if check(a.ziel) else 0)
     render(a.pdf, a.seite, a.ziel, a.scale)
