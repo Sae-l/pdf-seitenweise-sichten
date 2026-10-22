@@ -1,18 +1,18 @@
 {
   "name": "pdf-seitenweise-sichten",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "date": "2026-10-22",
   "owner": "Sae-l",
   "source": "Installed Codex skill, created in the Formelsammlung project",
-  "skill_sha256": "11cf02660b52b633e438c815e51af388aa68a94de94cef40d4cfa79134ab8ce5",
+  "skill_sha256": "8f441a5901dfc5c6ed6655bdb09de84f32fc2e18ecddda9a4cabf709394442f0",
   "checks": {
-    "formal_validation": "PASS (quick_validate.py, 1.2.0)",
-    "installed_copy_byte_equality": "NOT_YET (1.2.0 not installed)",
+    "formal_validation": "PASS (quick_validate.py, 1.3.0)",
+    "installed_copy_byte_equality": "NOT_YET (1.3.0 not installed)",
     "observed_workflow": "P2 PDF page 9 and eight selected pages in five example documents",
     "independent_comprehensive_behavior_test": "NOT_PERFORMED",
     "complete_formula_verification": "NOT_PERFORMED",
     "archive_line_endings": "Automatic Git text conversion disabled via .gitattributes",
-    "bundled_script_selftest": "PASS (scripts/selbsttest.py, synthetic PDF)",
-    "real_document_test_1_2_0": "NOT_PERFORMED"
+    "bundled_script_selftest": "PASS (scripts/selbsttest.py, synthetic PDF incl. duplicate, --alt, changed PDF)",
+    "real_document_test_1_3_0": "PASS (CuD Referenz 6 PDFs/83 S. via Obsidian-Plan/Pruefung/messen.py; Fersch 244 S. + FOSA 40 S. extract)"
   }
 }

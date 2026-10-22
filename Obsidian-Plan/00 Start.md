@@ -12,10 +12,10 @@ tags: ["pdf-sichtung", "moc"]
 # pdf-seitenweise-sichten – Plan und Nachweise
 
 > [!todo] Nächste Aktion
-> `D:\Saeed\Projekts\Formelsammlung\pdf_sichten.py` ins Repo bringen (hochladen oder pushen). Danach Schritt 2 in [[30 Plan v1.3.0]].
+> Pull Request v1.3.0 per Squash mergen, Tag `v1.3.0` setzen (Schritt 5 in [[30 Plan v1.3.0]]). Danach Einsatz in CuD.
 
 > [!info] Stand 22.10.2026
-> `main` = v1.2.0 (Commit `d49cc59`). Installation und Release-Action brauchbar; die Extraktion ist gegenüber dem alten Projekt-Helfer ein Rückschritt (siehe [[20 Ist-Stand und Messung]]).
+> v1.3.0 gebaut und am CuD-Satz gemessen: E1–E5 erfüllt (siehe [[20 Ist-Stand und Messung]]). Weiterentwicklung danach: Karte [PDF-Pipeline über v1.3.0 hinaus](https://github.com/Sae-l/pdf-seitenweise-sichten/issues/3).
 
 ## Lesereihenfolge
 

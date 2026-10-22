@@ -1,5 +1,15 @@
 # Änderungen
 
+## 1.3.0 — 2026-10-22
+
+- `scripts/sichtung.py` basiert jetzt auf dem bewährten Projekt-Helfer `pdf_sichten.py` (gleiches Layout: `Seitenindex.md`, `manifest.json`, `md/`, `bilder/`), ohne MPG1-spezifische Filter. Ersetzt die Neuentwicklung aus 1.2.0, die am CuD-Satz schlechter abschnitt.
+- Titel überspringen Kopf-/Fußzeilen, die auf mindestens der Hälfte der Seiten stehen, und reine Seitenzahlen.
+- Byte-identische PDFs werden nur einmal indiziert.
+- Prüfstatus je Seite (`text_read`, `original_image_viewed`, `subject_review`) im Manifest; `--alt` übernimmt Status und bereits angesehene Bilder eines früheren Sichtungsordners, nur für unveränderte PDFs.
+- `check` prüft auch Duplikate auf Veränderung.
+- Gemessen am CuD-Referenzsatz (6 PDFs, 83 Seiten): 108 statt 116 Zeichen pro Indexseite, keine „Seite N“-Titel, Duplikat übersprungen, alle 29 Prüfmarken und alle angesehenen Bilder byte-gleich übernommen. Fersch-Formelsammlung (244 S.) plus FOSA-Scan (40 S.): Index ca. 4 400 Tokens, 18 s.
+- README: Repository ist öffentlich.
+
 ## 1.2.0 — 2026-10-22
 
 - Extraktionswerkzeug `scripts/sichtung.py` gebündelt: `extract` (Seitenindex, Markdown je Seite, `manifest.json` mit SHA-256), `check` (Abschnitte vs. Seitenzahl, veraltete PDFs), `render` (Einzelseite).
