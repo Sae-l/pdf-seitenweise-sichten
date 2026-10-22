@@ -12,7 +12,7 @@ tags: ["pdf-sichtung", "moc"]
 # pdf-seitenweise-sichten – Plan und Nachweise
 
 > [!todo] Nächste Aktion
-> Pull Request v1.3.0 per Squash mergen, Tag `v1.3.0` setzen (Schritt 5 in [[30 Plan v1.3.0]]). Danach Einsatz in CuD.
+> v1.3.0 ist mit PR #9 auf `main` gemergt. Die anschließenden lokalen Korrekturen sind noch unveröffentlicht; vor Tag und Release den finalen Stand übernehmen und prüfen (Schritt 5 in [[30 Plan v1.3.0]]).
 
 > [!info] Stand 22.10.2026
 > v1.3.0 gebaut und am CuD-Satz gemessen: E1–E5 erfüllt (siehe [[20 Ist-Stand und Messung]]). Weiterentwicklung danach: Karte [PDF-Pipeline über v1.3.0 hinaus](https://github.com/Sae-l/pdf-seitenweise-sichten/issues/3).

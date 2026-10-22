@@ -1,0 +1,44 @@
+name: Prüfungen
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Python 3.12 / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Abhängigkeiten installieren
+        run: python -m pip install -r scripts/requirements.txt reportlab
+      - name: Selbsttest
+        run: python scripts/selbsttest.py
+      - name: Plan und Nachweise prüfen
+        run: python Obsidian-Plan/Pruefung/vault_pruefen.py
+      - name: Python-Syntax und Dateiintegrität prüfen
+        shell: python
+        run: |
+          import ast, hashlib, json
+          from pathlib import Path
+          for folder in ('scripts', 'Obsidian-Plan/Pruefung'):
+              for path in Path(folder).glob('*.py'):
+                  ast.parse(path.read_text(encoding='utf-8'), filename=str(path))
+          for line in Path('SHA256SUMS').read_text(encoding='utf-8').splitlines():
+              expected, name = line.split('  ', 1)
+              actual = hashlib.sha256(Path(name).read_bytes()).hexdigest()
+              assert actual == expected, f'Prüfsumme abweichend: {name}'
+          archive = json.loads(Path('ARCHIVE.json').read_text(encoding='utf-8'))
+          assert archive['skill_sha256'] == hashlib.sha256(Path('SKILL.md').read_bytes()).hexdigest()
+          print('Python-Syntax und SHA-256: PASS')

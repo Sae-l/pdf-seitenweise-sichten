@@ -16,6 +16,9 @@ with tempfile.TemporaryDirectory() as tmp:
     tmp = Path(tmp)
     quelle = tmp / "quelle"
     quelle.mkdir()
+    assert lauf("extract", quelle, tmp / "leer").returncode != 0
+    assert not (tmp / "leer").exists(), "leere Quelle erzeugt einen scheinbar gültigen Index"
+    assert lauf("extract", tmp / "fehlt", tmp / "leer").returncode != 0
     pdf = quelle / "Test.pdf"
     c = canvas.Canvas(str(pdf))
     for kopf, zeilen in [("Kapitel 1 Einführung in die Mechanik", ["Grundbegriffe der Kinematik"]),
@@ -50,6 +53,26 @@ with tempfile.TemporaryDirectory() as tmp:
     assert lauf("extract", quelle, tmp / "out").returncode != 0, "bestehender Index wurde nicht geschützt"
     assert lauf("check", tmp / "out").returncode == 0
 
+    shutil.copy(pdf, quelle / "Neu.pdf")
+    r = lauf("check", tmp / "out")
+    assert r.returncode != 0 and "Neu.pdf" in r.stdout, r.stdout
+    (quelle / "Neu.pdf").unlink()
+
+    md = tmp / "out" / next(d for d in manifest if "markdown" in d)["markdown"]
+    original = md.read_text(encoding="utf-8")
+    md.write_text(original.replace("## PDF-Seite 2", "## PDF-Seite 1"), encoding="utf-8")
+    assert lauf("check", tmp / "out").returncode != 0, "doppelte Seitennummer übersehen"
+    md.unlink()
+    assert lauf("check", tmp / "out").returncode != 0, "fehlendes Markdown übersehen"
+    md.write_text(original, encoding="utf-8")
+
+    geschützt = tmp / "geschuetzt"
+    geschützt.mkdir()
+    (geschützt / "manifest.json").write_text("[]", encoding="utf-8")
+    assert lauf("extract", quelle, geschützt).returncode != 0
+    assert (geschützt / "manifest.json").read_text(encoding="utf-8") == "[]"
+    assert lauf("check", geschützt).returncode != 0
+
     # Prüfstatus und handgerenderte Bilder werden mit --alt übernommen
     seiten[1].update(text_read=True, original_image_viewed=True, image="bilder/hand-S002.png")
     (tmp / "out" / "bilder" / "hand-S002.png").write_bytes(b"png")
@@ -59,6 +82,19 @@ with tempfile.TemporaryDirectory() as tmp:
     neu = next(d for d in json.loads((tmp / "neu" / "manifest.json").read_text(encoding="utf-8")) if "page_index" in d)
     assert neu["page_index"][1]["text_read"] is True and neu["page_index"][1]["original_image_viewed"] is True
     assert (tmp / "neu" / "bilder" / "hand-S002.png").read_bytes() == b"png"
+
+    # Ohne alte Prüfsumme gibt es keinen Beleg für unveränderte Quellen.
+    ohne_hash = json.loads((tmp / "out" / "manifest.json").read_text(encoding="utf-8"))
+    for d in ohne_hash:
+        d.pop("sha256", None)
+    (tmp / "out" / "manifest.json").write_text(json.dumps(ohne_hash), encoding="utf-8")
+    assert lauf("check", tmp / "out").returncode != 0
+    r = lauf("extract", quelle, tmp / "ohne_hash", "--alt", tmp / "out")
+    assert r.returncode == 0, r.stdout + r.stderr
+    ohne = next(d for d in json.loads((tmp / "ohne_hash" / "manifest.json").read_text(encoding="utf-8")) if "page_index" in d)
+    assert ohne["page_index"][1]["text_read"] is False
+    assert ohne["page_index"][1]["original_image_viewed"] is False
+    assert not (tmp / "ohne_hash" / "bilder" / "hand-S002.png").exists()
 
     # Geändertes PDF: check meldet VERALTET, alter Prüfstatus wird nicht übernommen
     pdf.write_bytes(pdf.read_bytes() + b"\n%geaendert\n")
@@ -72,5 +108,8 @@ with tempfile.TemporaryDirectory() as tmp:
     r = lauf("render", pdf, 2, tmp / "bilder")
     assert r.returncode == 0 and (tmp / "bilder" / "Test-S002.png").exists(), r.stderr
     assert lauf("render", pdf, 9, tmp / "bilder").returncode != 0
+
+    pdf.unlink()
+    assert lauf("check", tmp / "neu2").returncode != 0, "entfernte PDF übersehen"
 
 print("Selbsttest bestanden")

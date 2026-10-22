@@ -19,7 +19,7 @@ jobs:
       - name: ZIP für claude.ai / ChatGPT bauen
         run: |
           mkdir -p dist/pdf-seitenweise-sichten
-          cp -r SKILL.md scripts references dist/pdf-seitenweise-sichten/
+          cp -r SKILL.md LICENSE scripts references dist/pdf-seitenweise-sichten/
           cd dist && zip -r "pdf-seitenweise-sichten-${GITHUB_REF_NAME}.zip" pdf-seitenweise-sichten
       - name: Release anlegen
         env:

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="440" viewBox="0 0 1200 440" role="img" aria-labelledby="title desc">
+  <title id="title">PDF-Unterlagen gezielt sichten</title>
+  <desc id="desc">Vom kompakten Seitenindex zum relevanten Textabschnitt und zur Prüfung am Original. Quellen und Sichtungsstatus bleiben nachvollziehbar.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#101e2e"/><stop offset="1" stop-color="#183b46"/></linearGradient>
+  </defs>
+  <rect width="1200" height="440" rx="24" fill="url(#bg)"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <rect x="48" y="40" width="5" height="22" rx="2" fill="#6fe0ca"/>
+    <text x="66" y="57" fill="#a9c9cc" font-size="15" font-weight="600" letter-spacing="3">PDF · QUELLEN · KLARHEIT</text>
+    <text x="48" y="123" fill="#f4f8fa" font-size="43" font-weight="700">Weniger Kontext. Näher an der Quelle.</text>
+    <text x="48" y="162" fill="#c1d2da" font-size="21">Ein gezielter Weg von der Frage zur belegten Aussage.</text>
+    <g fill="#16313e" stroke="#3a5c69">
+      <rect x="48" y="207" width="344" height="165" rx="14"/>
+      <rect x="428" y="207" width="344" height="165" rx="14"/>
+      <rect x="808" y="207" width="344" height="165" rx="14"/>
+    </g>
+    <g font-size="14" font-weight="700" letter-spacing="2" fill="#6fe0ca">
+      <text x="72" y="242">01 / FINDEN</text><text x="452" y="242">02 / LESEN</text><text x="832" y="242">03 / PRÜFEN</text>
+    </g>
+    <g font-size="27" font-weight="600" fill="#f4f8fa">
+      <text x="72" y="284">Seitenindex</text><text x="452" y="284">Textabschnitt</text><text x="832" y="284">Originalseite</text>
+    </g>
+    <g font-size="17" fill="#c1d2da">
+      <text x="72" y="320">Dokument und PDF-Seite wählen.</text>
+      <text x="452" y="320">Den relevanten Abschnitt lesen.</text>
+      <text x="832" y="320">Formeln und Abbildungen ansehen.</text>
+      <text x="72" y="347">Warnhinweise berücksichtigen.</text>
+      <text x="452" y="347">Die Quelle bei der Aussage nennen.</text>
+      <text x="832" y="347">Offene Fragen sichtbar lassen.</text>
+    </g>
+    <g stroke="#6fe0ca" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M401 290h17m-6-6 6 6-6 6"/><path d="M781 290h17m-6-6 6 6-6 6"/>
+    </g>
+    <text x="48" y="409" fill="#a9c9cc" font-size="14">LOKALER PYTHON-HELFER</text>
+    <text x="1152" y="409" text-anchor="end" fill="#a9c9cc" font-size="14">SICHTUNG ≠ FACHLICHE FREIGABE</text>
+  </g>
+</svg>

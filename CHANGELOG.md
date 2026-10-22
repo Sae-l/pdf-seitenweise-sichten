@@ -1,5 +1,18 @@
 # Änderungen
 
+## Unveröffentlicht — 2026-10-22
+
+- Besucher-Einstieg mit Ablaufgrafik, ausführbarem Schnellstart, Prüfnachweisen und klaren Plattformgrenzen überarbeitet.
+- MIT-Lizenz für eigenen Code und Dokumentation ergänzt; Lizenzdatei wird im Release-ZIP mitgeliefert.
+- CI für Selbsttest, Vault, Python-Syntax und Prüfsummen auf Windows und Linux ergänzt.
+
+- Sichtung auf die Nutzerfrage begrenzen, vorhandene Ergebnisse nach erfolgreichem Check wiederverwenden und bei ausreichenden Quellen beenden.
+- `--alt` übernimmt Sichtungsnachweise und Bilder nur mit gleicher vorhandener SHA-256-Prüfsumme; alte Manifeste ohne Hash bleiben ungeprüft.
+- `check` erkennt neue PDFs, fehlende Prüfsummen/Markdown-Dateien, leere Manifeste und doppelte oder falsch geordnete Seitenabschnitte.
+- `extract` weist fehlende/leere Quellen ab und schützt auch ein vorhandenes Manifest vor Überschreiben.
+- Regressionstests für diese Fälle; Pillow als benötigte Bildabhängigkeit deklariert. Bestehende CLI-Aufrufe und Ausgabeformate bleiben erhalten.
+- README verweist auf den vorhandenen Hauptzweig statt auf den fehlenden Tag v1.2.0; keine Veröffentlichung oder Installation durch diese Änderung.
+
 ## 1.3.0 — 2026-10-22
 
 - `scripts/sichtung.py` basiert jetzt auf dem bewährten Projekt-Helfer `pdf_sichten.py` (gleiches Layout: `Seitenindex.md`, `manifest.json`, `md/`, `bilder/`), ohne MPG1-spezifische Filter. Ersetzt die Neuentwicklung aus 1.2.0, die am CuD-Satz schlechter abschnitt.

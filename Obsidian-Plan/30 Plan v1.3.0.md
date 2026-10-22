@@ -30,6 +30,7 @@ Ziel und Kriterien: [[10 Ziel und Erfolgskriterien]]. Ausgangslage: [[20 Ist-Sta
   - Was: `messen.py` gegen CuD-Klon.
   - Fertig wenn: E1–E3 erfüllt; Ergebnis in [[20 Ist-Stand und Messung]] ergänzt.
 - [ ] **5. Pull Request, Squash-Merge, Tag `v1.3.0`** (ca. 5 min, Saeed)
+  - Merge mit PR #9 erledigt; Tag und Release fehlen. Anschließende lokale Korrekturen stehen unter „Unveröffentlicht“ im Changelog.
   - Fertig wenn: Release enthält ZIP; Action grün.
   - Danach: Skill in CuD einsetzen, siehe Karte unten.
 - [ ] **6. Lokal installieren und testen** (ca. 10 min, Saeed)
@@ -46,7 +47,7 @@ Ziel und Kriterien: [[10 Ziel und Erfolgskriterien]]. Ausgangslage: [[20 Ist-Sta
 - [ ] ECC-Tools-App für dieses Repo entfernen (Kommentare ohne Prüfung, siehe [[40 Entscheidungen]]).
 
 > [!info] Stand 22.10.2026
-> Schritte 1–4 erledigt (Helfer von `D:` geholt, zusammengeführt, Messung am CuD-Satz: E1–E5 erfüllt). Offen: Merge mit Tag `v1.3.0`, lokale Installation.
+> Schritte 1–4 und Merge erledigt (PR #9). Die CuD-Messung gilt für v1.3.0. Lokale Korrekturen sichern die Statusübernahme strenger ab: ohne alten Hash werden keine Prüfmarken übernommen. Für diesen Arbeitsstand: erweiterter Selbsttest bestanden; CuD-Messung nicht erneut ausgeführt. Offen: Veröffentlichung und lokale Installation.
 
 > [!tip] Stoppregel
 > Nach Schritt 6 mit E1–E6 erfüllt: fertig. Keine weiteren Stufen ohne konkreten Anlass.

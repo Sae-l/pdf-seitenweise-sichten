@@ -44,15 +44,18 @@ def alte_pruefungen(ordner):
 
 def extract(quelle, ziel, alt_ordner=None, ueberschrift=None):
     quelle, ziel = Path(quelle), Path(ziel)
-    if (ziel / "Seitenindex.md").exists():
-        sys.exit(f"{ziel / 'Seitenindex.md'} existiert bereits. Neuen Ausgabeordner wählen und erst nach Vergleich übernehmen.")
+    sources = sorted(quelle.glob("*.pdf")) if quelle.is_dir() else []
+    if not sources:
+        sys.exit(f"Keine PDFs im Quellordner: {quelle}")
+    if (ziel / "Seitenindex.md").exists() or (ziel / "manifest.json").exists():
+        sys.exit(f"Index oder Manifest in {ziel} existiert bereits. Neuen Ausgabeordner wählen und erst nach Vergleich übernehmen.")
     (ziel / "md").mkdir(parents=True, exist_ok=True)
     (ziel / "bilder").mkdir(exist_ok=True)
     alt = alte_pruefungen(alt_ordner) if alt_ordner else {}
     records, gesehen, uebernommen = [], {}, 0
     index = [f"# {ueberschrift or 'Seitenindex: ' + quelle.name}", "",
              "Maschinelle Textextraktion zum Suchen. Formeln, Tabellen und Zeichnungen am Original prüfen.", ""]
-    for source in sorted(quelle.glob("*.pdf")):
+    for source in sources:
         hashwert = sha256(source)
         if hashwert in gesehen:
             index += [f"## {source.stem}", f"Byte-identisch mit {gesehen[hashwert]}; nicht erneut indiziert.", ""]
@@ -91,7 +94,7 @@ def extract(quelle, ziel, alt_ordner=None, ueberschrift=None):
             index.append(f"- S. {number}: {preview}" + (" [" + ", ".join(flags) + "]" if flags else ""))
             image, status = None, dict(STATUS)
             alt_hash, alt_status, alt_bild = alt.get((source.name, number), (None, None, None))
-            if alt_status is not None and alt_hash in (None, hashwert):  # Status gilt nur für unveränderte PDFs
+            if alt_status is not None and alt_hash == hashwert:
                 status.update(alt_status)
                 uebernommen += 1
                 if alt_bild and alt_bild.is_file():  # bereits angesehenes Bild hat Vorrang vor neuem Rendern
@@ -123,19 +126,35 @@ def check(ziel, quelle=None):
     ziel = Path(ziel)
     probleme = 0
     records = json.loads((ziel / "manifest.json").read_text(encoding="utf-8"))
+    if not records:
+        print("FEHLER: Manifest enthält keine PDFs")
+        return 1
     for d in records:
         if "duplicate_of" not in d:
             md = ziel / d["markdown"]
-            abschnitte = len(re.findall(r"(?m)^## PDF-Seite \d+$", md.read_text(encoding="utf-8")))
-            if abschnitte != d["pages"]:
-                print(f"FEHLER {md.name}: {abschnitte} Abschnitte, {d['pages']} Seiten"); probleme += 1
+            if not md.is_file():
+                print(f"FEHLER {md.name}: Markdown fehlt"); probleme += 1
+                continue
+            text = md.read_text(encoding="utf-8")
+            abschnitte = [int(n) for n in re.findall(r"(?m)^## PDF-Seite (\d+)$", text)]
+            if abschnitte != list(range(1, d["pages"] + 1)):
+                print(f"FEHLER {md.name}: Seitenabschnitte fehlen, sind doppelt oder falsch geordnet"); probleme += 1
             if quelle is None:  # Quellordner aus der "Quelle:"-Zeile des ersten Markdowns ableiten
-                quelle = (md.parent / re.search(r"(?m)^Quelle: (.+)$", md.read_text(encoding="utf-8")).group(1)).parent
+                source = re.search(r"(?m)^Quelle: (.+)$", text)
+                if source:
+                    quelle = (md.parent / source.group(1)).parent
+    if quelle is None or not Path(quelle).is_dir():
+        print("FEHLER: Quellordner fehlt oder ist nicht bestimmbar")
+        return probleme + 1
+    for name in sorted({p.name for p in Path(quelle).glob("*.pdf")} - {d["pdf"] for d in records}):
+        print(f"VERALTET {name}: neue PDF, neu extrahieren"); probleme += 1
     for d in records:
         pdf = Path(quelle) / d["pdf"]
         if not pdf.exists():
             print(f"WARNUNG {d['pdf']}: Original nicht gefunden"); probleme += 1
-        elif "sha256" in d and sha256(pdf) != d["sha256"]:
+        elif not d.get("sha256"):
+            print(f"UNGEPRÜFT {d['pdf']}: SHA-256 fehlt, neu extrahieren"); probleme += 1
+        elif sha256(pdf) != d["sha256"]:
             print(f"VERALTET {d['pdf']}: PDF geändert, neu extrahieren"); probleme += 1
     if not probleme:
         print("OK: Index aktuell, Abschnittszahlen stimmen")
