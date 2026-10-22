@@ -1,5 +1,15 @@
 # Änderungen
 
+## 1.2.0 — 2026-10-22
+
+- Extraktionswerkzeug `scripts/sichtung.py` gebündelt: `extract` (Seitenindex, Markdown je Seite, `manifest.json` mit SHA-256), `check` (Abschnitte vs. Seitenzahl, veraltete PDFs), `render` (Einzelseite).
+- Festes Index-Schema und dokumentierte Flag-Heuristik.
+- Schutz: `extract` bricht ab, wenn im Ziel bereits ein Index liegt.
+- Vorgehen für `[wenig Text]`-Seiten (Bildsichtung, optional OCR als „ungeprüft“).
+- Hinweis zur Aufbereitung als eigene Inhalte (bereinigte Arbeitsfassung je Kapitel).
+- Projektbeispiel nach `references/beispiel-formelsammlung.md` verschoben; Installation auch für Claude Code dokumentiert.
+- Selbsttest `scripts/selbsttest.py` mit synthetischem PDF bestanden; kein Test an echten Vorlesungsunterlagen.
+
 ## 1.1.0 — 2026-10-13
 
 - Beschreibung um typische Auslöser erweitert (Folien, Übungsblätter, Endantworten, „schau in Kapitel X nach“).
