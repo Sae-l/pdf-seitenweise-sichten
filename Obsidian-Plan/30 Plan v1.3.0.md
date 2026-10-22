@@ -29,8 +29,8 @@ Ziel und Kriterien: [[10 Ziel und Erfolgskriterien]]. Ausgangslage: [[20 Ist-Sta
 - [x] **4. Gegenprüfung an CuD** (ca. 5 min, Claude)
   - Was: `messen.py` gegen CuD-Klon.
   - Fertig wenn: E1–E3 erfüllt; Ergebnis in [[20 Ist-Stand und Messung]] ergänzt.
-- [ ] **5. Pull Request, Squash-Merge, Tag `v1.3.0`** (ca. 5 min, Saeed)
-  - Merge mit PR #9 erledigt; Tag und Release fehlen. Anschließende lokale Korrekturen stehen unter „Unveröffentlicht“ im Changelog.
+- [ ] **5. Pull Request, Squash-Merge, Release `v1.3.1`** (ca. 5 min, Saeed)
+  - Merge von v1.3.0 und Korrekturen mit PR #9/#10 erledigt. v1.3.1 bündelt beide Stände; ein separater Tag v1.3.0 entfällt. Aktueller Veröffentlichungsstatus: [Release v1.3.1](https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.3.1).
   - Fertig wenn: Release enthält ZIP; Action grün.
   - Danach: Skill in CuD einsetzen, siehe Karte unten.
 - [ ] **6. Lokal installieren und testen** (ca. 10 min, Saeed)
@@ -47,7 +47,7 @@ Ziel und Kriterien: [[10 Ziel und Erfolgskriterien]]. Ausgangslage: [[20 Ist-Sta
 - [ ] ECC-Tools-App für dieses Repo entfernen (Kommentare ohne Prüfung, siehe [[40 Entscheidungen]]).
 
 > [!info] Stand 22.10.2026
-> Schritte 1–4 und Merge erledigt (PR #9). Die CuD-Messung gilt für v1.3.0. Lokale Korrekturen sichern die Statusübernahme strenger ab: ohne alten Hash werden keine Prüfmarken übernommen. Für diesen Arbeitsstand: erweiterter Selbsttest bestanden; CuD-Messung nicht erneut ausgeführt. Offen: Veröffentlichung und lokale Installation.
+> Schritte 1–4 und Merges erledigt (PR #9/#10). Die CuD-Messung gilt für v1.3.0. v1.3.1 sichert die Statusübernahme strenger ab: ohne alten Hash werden keine Prüfmarken übernommen. Erweiterter Selbsttest bestanden; CuD-Messung nicht erneut ausgeführt. Veröffentlichung anhand des verlinkten Releases prüfen; lokale Installation bleibt offen.
 
 > [!tip] Stoppregel
 > Nach Schritt 6 mit E1–E6 erfüllt: fertig. Keine weiteren Stufen ohne konkreten Anlass.

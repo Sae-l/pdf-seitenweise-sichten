@@ -1,6 +1,10 @@
 # Änderungen
 
-## Unveröffentlicht — 2026-10-22
+## 1.3.1 — 2026-10-22
+
+- Release-ZIP wird aus getrackten Dateien erzeugt, inklusive MIT-Lizenz und Versionsnachweis. Eine separate `SHA256SUMS` schützt den Download.
+- Release-Action prüft Tests, Vault, Repository-Hashes und Tag-Version, verwendet Python 3.12 und erstellt zunächst einen überprüfbaren Entwurf.
+- GitHub Actions auf geprüfte Commit-SHAs festgelegt; Schreibrechte auf den Release-Job begrenzt.
 
 - Besucher-Einstieg mit Ablaufgrafik, ausführbarem Schnellstart, Prüfnachweisen und klaren Plattformgrenzen überarbeitet.
 - MIT-Lizenz für eigenen Code und Dokumentation ergänzt; Lizenzdatei wird im Release-ZIP mitgeliefert.
@@ -11,7 +15,7 @@
 - `check` erkennt neue PDFs, fehlende Prüfsummen/Markdown-Dateien, leere Manifeste und doppelte oder falsch geordnete Seitenabschnitte.
 - `extract` weist fehlende/leere Quellen ab und schützt auch ein vorhandenes Manifest vor Überschreiben.
 - Regressionstests für diese Fälle; Pillow als benötigte Bildabhängigkeit deklariert. Bestehende CLI-Aufrufe und Ausgabeformate bleiben erhalten.
-- README verweist auf den vorhandenen Hauptzweig statt auf den fehlenden Tag v1.2.0; keine Veröffentlichung oder Installation durch diese Änderung.
+- README enthält einen vollständigen Schnellstart und die Trennung zwischen Werkzeug, Agent-Skill und fachlicher Prüfung. Bestehende lokale Installationen werden nicht verändert.
 
 ## 1.3.0 — 2026-10-22
 
