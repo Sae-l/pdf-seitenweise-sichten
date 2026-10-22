@@ -1,5 +1,14 @@
 # Änderungen
 
+## Unveröffentlicht — 2026-10-22
+
+- Portable Projektinstallation mit vollständigen Skill-Kopien unter `.agents/skills/` und `.claude/skills/` für Codex, Claude Code, Antigravity, VS Code/Copilot und GitHub Copilot.
+- Globalen Antigravity-CLI-Pfad ergänzt. Native Installer wiederholbar; bestehende Kopien und fremde Links bleiben unverändert und melden einen Konflikt.
+- GitHub-Copilot-Einstieg und Setup-Workflow ergänzt; die verbindlichen Verfahrensanweisungen bleiben in der Root-`SKILL.md`.
+- Ressourcenpfade relativ zur geladenen Skill-Datei dokumentiert; Cloud-Zugang, Python-Ausführung und Bildansicht werden als separate Voraussetzungen behandelt.
+- Technische Plattformtests für portable Pakete und native Installer ergänzt, einschließlich Schutz gegen aus dem Projekt führende Verknüpfungen; lokale Windows-Richtlinien werden nicht umgangen. CI verlangt Ausführung aller Tests.
+- Offizielle Plattformquellen und Obsidian-Erfolgskriterien aktualisiert. Native Agent-Endabnahmen bleiben offen.
+
 ## 1.3.1 — 2026-10-22
 
 - Release-ZIP wird aus getrackten Dateien erzeugt, inklusive MIT-Lizenz und Versionsnachweis. Eine separate `SHA256SUMS` schützt den Download.

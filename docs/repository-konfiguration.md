@@ -13,6 +13,7 @@ Prüfdatum: 22.10.2026. Einstellungen auf GitHub können sich nach diesem Datum 
 | Actions | Standard-Token nur lesend; automatische PR-Genehmigung durch Workflows deaktiviert |
 | Workflow-Abhängigkeiten | Verwendete Actions auf konkrete Commit-SHAs festgelegt |
 | Veröffentlichung | Nur Release-Job mit Schreibrecht; neuer Versions-Tag erzeugt nach Prüfungen einen Entwurf mit ZIP und SHA-256-Datei |
+| Copilot-Umgebung | Separater Setup-Workflow mit Leserecht bereitet Python/PDF-Abhängigkeiten vor; der GitHub-Skill-Einstieg verweist auf die verbindliche Root-Datei |
 
 ## ECC-Integration
 

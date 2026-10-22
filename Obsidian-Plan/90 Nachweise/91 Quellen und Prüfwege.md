@@ -17,6 +17,7 @@ tags: ["pdf-sichtung", "quellen"]
 | --- | --- |
 | Messwerte in [[20 Ist-Stand und Messung]] | `python Obsidian-Plan/Pruefung/messen.py <CuD-klon>` |
 | Extraktion, `check`, Überschreibschutz, `render` | `python scripts/selbsttest.py` (braucht `reportlab`) |
+| Portable Pakete und native Installer | `python scripts/plattformtest.py`; lokale übersprungene Tests sind als solche zu berichten, in CI verboten |
 | Skill formal gültig | `quick_validate.py` aus dem skill-creator |
 | Archivdateien unverändert | `sha256sum -c SHA256SUMS` |
 | Vault vollständig und verlinkt | `python Obsidian-Plan/Pruefung/vault_pruefen.py` |
@@ -25,8 +26,12 @@ tags: ["pdf-sichtung", "quellen"]
 
 | Thema | Quelle | Kernaussage |
 | --- | --- | --- |
+| Codex | [Build skills](https://learn.chatgpt.com/docs/build-skills) | Projekt und Benutzer: `.agents/skills`; symbolische Skill-Verzeichnisse unterstützt |
+| Claude Code | [Extend Claude with skills](https://code.claude.com/docs/en/skills) | Lokaler Benutzer/Projekt: `.claude/skills`; `/skill-name`; Cloud-Sitzungen gesondert behandeln |
 | VS Code / Copilot | [Use Agent Skills in VS Code](https://code.visualstudio.com/docs/agent-customization/agent-skills) | Ordner `.github/`, `.claude/`, `.agents/skills`; `name` muss dem Ordner entsprechen |
-| Antigravity | [Authoring Google Antigravity Skills](https://codelabs.developers.google.com/getting-started-with-antigravity-skills?hl=en) | global `~/.gemini/config/skills/`, Projekt `.agents/skills/`; Skripte in `scripts/` |
+| Antigravity | [Agent skills](https://antigravity.google/docs/skills) | Projekt `.agents/skills`; App/IDE global `.gemini/config/skills`; CLI global `.gemini/antigravity-cli/skills` |
+| GitHub Copilot | [Adding agent skills](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/add-skills) | Projekt-Skills unter `.github/skills`, `.claude/skills` oder `.agents/skills`; Ressourcen im Skill-Verzeichnis |
+| GitHub-Agent-Umgebung | [Configure the development environment](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment) | `.github/workflows/copilot-setup-steps.yml` mit Job `copilot-setup-steps` installiert Abhängigkeiten vor Agent-Arbeit |
 | ChatGPT | [Skills in ChatGPT](https://help.openai.com/en/articles/20001066) | nur Business, Enterprise, Healthcare, Edu; Upload über „Create“ |
 | ECC Tools | [GitHub Marketplace](https://github.com/marketplace/ecc-tools) | private Repos nur mit Pro (19 $ pro Person und Monat) |
 | Fremde PDF-Skills | [mineru-refine](https://skillselion.com/skills/LcpMarvel/mineru-refine/plugin), [all2md](https://all2md.readthedocs.io/en/stable/_sources/agent_skills.rst.txt) | mineru-refine nutzt externe APIs; all2md-Lokalität ungeklärt |

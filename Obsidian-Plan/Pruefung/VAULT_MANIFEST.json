@@ -9,8 +9,8 @@
     },
     {
       "path": "10 Ziel und Erfolgskriterien.md",
-      "bytes": 1594,
-      "sha256": "d077b6faff8814c10a625da585530b86f848d34001c4361e439a34ded08d64d8"
+      "bytes": 1956,
+      "sha256": "59434405eb533dffcee841685910a437b88bb25939c90b6da0399e93c3bf3f51"
     },
     {
       "path": "20 Ist-Stand und Messung.md",
@@ -19,13 +19,13 @@
     },
     {
       "path": "30 Plan v1.3.0.md",
-      "bytes": 3078,
-      "sha256": "7e5cba81511b23d64d0c35d1bd43091a2db581e2343481e3ac669e8f7075b9e6"
+      "bytes": 3429,
+      "sha256": "1408e52fa7feec4483b584644915d78a76e40885dbf4a4c3b1e10a814100eca6"
     },
     {
       "path": "31 Plattformen und Installation.md",
-      "bytes": 1641,
-      "sha256": "734e1abbbd6998cab438398ee4f3a077268eea997a7a1eba0a52ee11998533ff"
+      "bytes": 5802,
+      "sha256": "ed355343a901928a21015abfc976e564b46771a1fdff216577972af79e16d059"
     },
     {
       "path": "40 Entscheidungen.md",
@@ -39,8 +39,8 @@
     },
     {
       "path": "90 Nachweise/91 Quellen und Prüfwege.md",
-      "bytes": 2112,
-      "sha256": "cc3b4c2a125f6f9098b84a759693131791f2765ad0af7925b6bb66542e5a4c76"
+      "bytes": 3154,
+      "sha256": "c9c9f967fc76ce399b3f89a0c693c644bb5d0fc3e49f4f3aae9350e39cd44971"
     },
     {
       "path": "Pruefung/messen.py",

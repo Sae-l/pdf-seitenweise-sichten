@@ -10,6 +10,8 @@ Ein Agent-Skill mit lokalem Python-Werkzeug für Vorlesungsfolien, Übungsblätt
 
 **Version 1.3.1:** [Release und Skill-ZIP](https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.3.1) · [Release-Hinweise](docs/releases/v1.3.1.md)
 
+Die nachfolgenden Plattform-Erweiterungen einschließlich `install_projekt.py` gehören zum Entwicklungsstand nach v1.3.1. Nutze dafür den Repository-Klon; das bestehende Release-ZIP wird nicht nachträglich verändert.
+
 ## Was du bekommst
 
 | Nutzen | Umsetzung |
@@ -69,6 +71,18 @@ Vergleiche die neue Ausgabe mit der bisherigen, bevor du sie übernimmst. Ohne a
 
 ## Als Skill nutzen
 
+### Empfohlen: portabel im Zielprojekt
+
+```sh
+python scripts/install_projekt.py "../Mein-Projekt"
+```
+
+Das vorhandene Zielprojekt erhält zwei eigenständige Skill-Kopien: `.agents/skills/pdf-seitenweise-sichten/` für Codex, Antigravity, VS Code/Copilot und GitHub Copilot sowie `.claude/skills/pdf-seitenweise-sichten/` für Claude Code. Beide enthalten Anweisungen, Skripte und Referenzen. Bestehende Ziele führen zum Abbruch; Updates erst vergleichen und sichern. Die Kopien aktualisieren sich nicht durch `git pull` im ursprünglichen Klon.
+
+Für GitHub Copilot Cloud die erzeugten Skill-Dateien im Zielrepository committen und die Python-Abhängigkeiten in dessen Agent-Umgebung installieren. Globale Verknüpfungen und Laufwerkspfade deines Rechners sind in der Cloud nicht verfügbar. Dieses Repository bringt dafür einen schlanken `.github/skills/`-Einstieg und [Copilot-Setup-Schritte](.github/workflows/copilot-setup-steps.yml) mit. Das Setup anderer Projekte muss deren bestehende Abhängigkeiten berücksichtigen; es wird nicht automatisch überschrieben.
+
+### Alternativ: ein lokaler Klon für mehrere Werkzeuge
+
 Ein Klon kann mit den Skill-Verzeichnissen mehrerer lokaler Werkzeuge verknüpft werden:
 
 | System | Im Repository ausführen |
@@ -76,9 +90,9 @@ Ein Klon kann mit den Skill-Verzeichnissen mehrerer lokaler Werkzeuge verknüpft
 | Windows | `powershell -File install.ps1` |
 | macOS / Linux | `bash install.sh` |
 
-Die Skripte verknüpfen nach `~/.claude/skills/`, `~/.agents/skills/` und `~/.gemini/config/skills/`. Echte vorhandene Kopien an diesen Zielpfaden werden übersprungen. Eine ältere Installation unter `~/.codex/skills/` separat prüfen, damit keine veraltete Kopie geladen wird. Die Python-Abhängigkeiten werden über den Schnellstart installiert.
+Die Skripte verknüpfen nach `~/.claude/skills/`, `~/.agents/skills/`, `~/.gemini/config/skills/` (Antigravity App/IDE) und `~/.gemini/antigravity-cli/skills/` (Antigravity CLI). Bestehende passende Verknüpfungen sind wiederverwendbar. Echte Kopien und fremde Verknüpfungen bleiben unverändert und führen zu einem Fehlerstatus. Eine ältere Installation unter `~/.codex/skills/` separat prüfen, damit keine veraltete Kopie geladen wird. Die Python-Abhängigkeiten werden über den Schnellstart installiert.
 
-Alternativ den Skill für ein Projekt in dessen `.agents/skills/pdf-seitenweise-sichten/` oder `.claude/skills/pdf-seitenweise-sichten/` ablegen. Welche Pfade und Funktionen dein Werkzeug unterstützt, ist in [Plattformen und Installation](Obsidian-Plan/31%20Plattformen%20und%20Installation.md) mit dem jeweiligen Prüfstand dokumentiert.
+Wenn Windows `.ps1` blockiert, nutze die portable Python-Projektinstallation. Ändere dafür keine Ausführungsrichtlinie. Welche Pfade und Funktionen dein Werkzeug unterstützt, ist in [Plattformen und Installation](Obsidian-Plan/31%20Plattformen%20und%20Installation.md) mit offiziellen Quellen und dem jeweiligen Prüfstand dokumentiert.
 
 Beispielauftrag nach dem Laden des Skills:
 
@@ -89,6 +103,8 @@ Nenne Dokument, PDF-Seite und Aufgabennummer. Prüfe die Formel
 am Originalbild und verrate noch keine Endantwort.
 ```
 
+In Codex den Skill über `$pdf-seitenweise-sichten` wählen. Claude Code, Antigravity und VS Code/Copilot unterstützen `/pdf-seitenweise-sichten`. In GitHub Copilot den Skill-Namen und den Auftrag ausdrücklich nennen. Die verfügbaren Werkzeuge und Berechtigungen der jeweiligen Agent-Umgebung bleiben Voraussetzung; ein geladener Skill allein bestätigt keine Bildsichtung.
+
 `git pull` im Klon aktualisiert verknüpfte Installationen gemeinsam. Für einen festgelegten Stand einen geprüften Commit oder vorhandenen Tag verwenden.
 
 ## Prüfstand
@@ -96,6 +112,7 @@ am Originalbild und verrate noch keine Endantwort.
 | Bereich | Nachweis und Grenze |
 | --- | --- |
 | Automatische Tests | [Selbsttest](scripts/selbsttest.py): Extraktion, Duplikate, Rendering, Änderungsprüfung, Statusübernahme und Schutz vorhandener Ergebnisse. Die [CI](.github/workflows/checks.yml) ist für Windows und Linux eingerichtet. |
+| Plattformbereitstellung | [Plattformtest](scripts/plattformtest.py): portable Pakete, Ausführung aus anderem Arbeitsordner, native Installer, Wiederholung und Konfliktschutz. In der CI dürfen diese Tests nicht übersprungen werden. Das ersetzt keine Endabnahme in den fünf Agent-Oberflächen. |
 | Skill-Format | Formale Validierung des aktuellen Arbeitsstands bestanden; Details in [ARCHIVE.json](ARCHIVE.json). |
 | Dokumentation | [Vault-Prüfung](Obsidian-Plan/Pruefung/vault_pruefen.py) prüft Verknüpfungen, Erreichbarkeit und Manifest. [SHA256SUMS](SHA256SUMS) dokumentiert die aufgeführten Repository-Dateien. |
 | Reale Unterlagen | v1.3.0 wurde an CuD-Unterlagen und zwei weiteren PDF-Sätzen erprobt. Messgrundlage und Grenzen stehen in [Ist-Stand und Messung](Obsidian-Plan/20%20Ist-Stand%20und%20Messung.md). Diese Ergebnisse gelten nicht automatisch für spätere Änderungen. |
@@ -108,6 +125,7 @@ Die Zustände **indiziert**, **als Text gelesen**, **im Originalbild angesehen**
 ```sh
 python -m pip install reportlab
 python scripts/selbsttest.py
+python scripts/plattformtest.py
 python Obsidian-Plan/Pruefung/vault_pruefen.py
 ```
 

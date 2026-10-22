@@ -29,12 +29,13 @@ Ziel und Kriterien: [[10 Ziel und Erfolgskriterien]]. Ausgangslage: [[20 Ist-Sta
 - [x] **4. Gegenprüfung an CuD** (ca. 5 min, Claude)
   - Was: `messen.py` gegen CuD-Klon.
   - Fertig wenn: E1–E3 erfüllt; Ergebnis in [[20 Ist-Stand und Messung]] ergänzt.
-- [ ] **5. Pull Request, Squash-Merge, Release `v1.3.1`** (ca. 5 min, Saeed)
+- [x] **5. Pull Request, Squash-Merge, Release `v1.3.1`**
   - Merge von v1.3.0 und Korrekturen mit PR #9/#10 erledigt. v1.3.1 bündelt beide Stände; ein separater Tag v1.3.0 entfällt. Aktueller Veröffentlichungsstatus: [Release v1.3.1](https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.3.1).
-  - Fertig wenn: Release enthält ZIP; Action grün.
+  - Erledigt: PR #11 gemergt, Release öffentlich, ZIP und SHA-256 heruntergeladen und mit frischem Tag-Klon verglichen; Release-Action und Windows-/Linux-CI grün.
   - Danach: Skill in CuD einsetzen, siehe Karte unten.
-- [ ] **6. Lokal installieren und testen** (ca. 10 min, Saeed)
-  - Was: `install.ps1`, dann ein Testauftrag je genutztem Werkzeug.
+- [ ] **6. Fünf Zielumgebungen abnehmen**
+  - Was: portable Projektkopien oder globale Verknüpfungen nutzen; je ein belegter Testauftrag in Codex, Claude Code, Antigravity, VS Code/Copilot und GitHub Copilot Cloud.
+  - Technische Bereitstellung: Projektinstaller, GitHub-Einstieg und Copilot-Setup ergänzt; automatischer Plattformtest vorhanden. Native Agent-Endabnahmen bleiben offen.
   - Fertig wenn: E6 erfüllt, Ergebnis in [[31 Plattformen und Installation]] vermerkt.
 
 ## Später empfohlen
