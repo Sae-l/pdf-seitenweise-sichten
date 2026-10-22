@@ -19,5 +19,5 @@ e31baa44d0f9ff21f79aa1f9c21567260657bc83402eb582580af04d6cdae87c  scripts/instal
 547aff8a13f509bebc6dc404b3015e8c43fb78f3285e0c1e183019762a912f75  scripts/plattformtest.py
 417419bc3bcb5e7283eb7beb735bd16c88d0461b6917d8f7e6f901829d26f858  .github/skills/pdf-seitenweise-sichten/SKILL.md
 53230293ff46880ce4981dabe7d686b966761ef80cb3249e79dd0c70709910b2  .github/workflows/copilot-setup-steps.yml
-9229347b9daff37af04432c288d71615963d060fac5b9aefe8bd3f30b6328263  docs/releases/v1.4.0.md
+bfb15dac1dd16905c2ae2475df4923784f1193c26412feabc3c82aba13cc8ef9  docs/releases/v1.4.0.md
 9ff346b1c909376f1ff7971e6e46226378a689244612de2a884e04ed1850dad6  docs/plattformabnahme-v1.4.0.md
