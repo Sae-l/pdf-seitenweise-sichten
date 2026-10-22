@@ -22,7 +22,9 @@ Fehlende automatische Warnungen beweisen keine korrekte Formel. Ein erzeugtes Bi
 
 ## Gebündeltes Werkzeug
 
-`scripts/sichtung.py` (benötigt `pypdfium2`; liegt im Skill-Ordner, nicht im Projekt):
+Alle Ressourcenpfade sind relativ zum Ordner dieser `SKILL.md`. Ermittle den vom Agenten geladenen Skill-Pfad und verwende für Skriptaufrufe den vollständigen Pfad; das Arbeitsverzeichnis kann ein anderes Projekt sein. Verwende `python` oder `python3`, je nachdem, welcher Python-3-Interpreter in der Umgebung verfügbar ist.
+
+`scripts/sichtung.py` (benötigt `pypdfium2` und `Pillow`; liegt im Skill-Ordner):
 
 | Aufruf | Wirkung |
 | --- | --- |
@@ -56,6 +58,7 @@ Meist ein Scan, eine reine Abbildung oder eine Titelfolie. Die Seite rendern und
 
 ## Wenn ein Zugang fehlt
 
+- Prüfe, ob die Umgebung Dateien lesen, Python ausführen und Bilder anzeigen kann. Ein Skill erteilt keine zusätzlichen Rechte. In einer Cloud-Umgebung müssen die benötigten Quellen dort vorhanden sein; lokale Laufwerkspfade des Nutzers sind kein Cloud-Zugang. Ohne Bildansicht keine Originalbildsichtung behaupten; einen fehlenden Prüfschritt ausdrücklich offen lassen.
 - Suche zunächst einen vorhandenen `Seitenindex.md`, auch in benachbarten Sichtungsordnern. Nutze einen vorhandenen Projekt-Helfer oder `scripts/sichtung.py` statt eine weitere Extraktionspipeline anzulegen.
 - Prüfe vor dem Aufruf eines Projekt-Helfers, wohin er schreibt. Extraktionsskripte überschreiben oft `Seitenindex.md` und Manifest ihres Zielordners ohne Rückfrage; dabei gehen manuelle Sichtungsnachweise verloren. Schreibe deshalb in einen neuen Zielordner und übernimm Ergebnisse erst nach Vergleich.
 - Erhalte Originaldateien unverändert und trenne die Ausgabe vom Quellordner.

@@ -4,16 +4,24 @@
 set -euo pipefail
 NAME=pdf-seitenweise-sichten
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SKILL_HOME="${1:-$HOME}"
+conflicts=0
 
-for dir in "$HOME/.claude/skills" "$HOME/.agents/skills" "$HOME/.gemini/config/skills"; do
+for dir in "$SKILL_HOME/.claude/skills" "$SKILL_HOME/.agents/skills" "$SKILL_HOME/.gemini/config/skills" "$SKILL_HOME/.gemini/antigravity-cli/skills"; do
   mkdir -p "$dir"
   target="$dir/$NAME"
-  if [ -e "$target" ] && [ ! -L "$target" ]; then
-    echo "übersprungen: $target ist eine echte Kopie, keine Verknüpfung – erst sichern und entfernen"
+  if [ -L "$target" ] && [ "$(readlink "$target")" = "$SRC" ]; then
+    echo "bereits verknüpft: $target"
     continue
   fi
-  ln -sfn "$SRC" "$target"
+  if [ -e "$target" ] || [ -L "$target" ]; then
+    echo "Konflikt: $target bleibt unverändert; vorhandene Kopie oder fremde Verknüpfung zuerst prüfen" >&2
+    conflicts=1
+    continue
+  fi
+  ln -s "$SRC" "$target"
   echo "verknüpft: $target -> $SRC"
 done
 
 echo "Benötigt Python-Paket: python3 -m pip install -r \"$SRC/scripts/requirements.txt\""
+exit "$conflicts"
