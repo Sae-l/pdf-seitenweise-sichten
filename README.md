@@ -10,6 +10,10 @@ Eine kleine Codex-Skill zur tokensparsamen Sichtung von PDF-Unterlagen. Sie arbe
 
 Die verbindlichen Anweisungen stehen in [SKILL.md](SKILL.md). Ab 1.2.0 liegt das Extraktionswerkzeug [scripts/sichtung.py](scripts/sichtung.py) bei (Index erzeugen, Aktualität prüfen, Seite rendern; benötigt `pypdfium2`). Selbsttest: `python scripts/selbsttest.py` (zusätzlich `reportlab`). PDF-Erstellung gehört nicht zum Umfang.
 
+## Plan und Nachweise
+
+Der weitere Plan (v1.3.0), gemessene Vergleiche, Entscheidungen und Prüfbefehle liegen als Obsidian-Vault in [Obsidian-Plan/00 Start.md](Obsidian-Plan/00%20Start.md). Prüfen: `python Obsidian-Plan/Pruefung/vault_pruefen.py`.
+
 ## Installation und Nutzung
 
 **Empfohlen: einmal klonen, überall verknüpfen.** Ein Klon versorgt alle lokalen Werkzeuge; `git pull` im Klon aktualisiert alle gleichzeitig.
