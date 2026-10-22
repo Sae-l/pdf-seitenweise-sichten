@@ -8,9 +8,9 @@ Ein Agent-Skill mit lokalem Python-Werkzeug für Vorlesungsfolien, Übungsblätt
 
 [Schnellstart](#schnellstart) · [Als Skill nutzen](#als-skill-nutzen) · [Prüfstand](#prüfstand) · [Änderungen](CHANGELOG.md) · [MIT-Lizenz](LICENSE)
 
-**Version 1.3.1:** [Release und Skill-ZIP](https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.3.1) · [Release-Hinweise](docs/releases/v1.3.1.md)
+**Version 1.4.0:** [Release und Skill-ZIP](https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.4.0) · [Release-Hinweise](docs/releases/v1.4.0.md)
 
-Die nachfolgenden Plattform-Erweiterungen einschließlich `install_projekt.py` gehören zum Entwicklungsstand nach v1.3.1. Nutze dafür den Repository-Klon; das bestehende Release-ZIP wird nicht nachträglich verändert.
+Das Release enthält die portable Projektinstallation und die beiden Korrekturen aus dem Repository-Audit. Den Umfang der Plattformprüfung dokumentiert der [Abnahmebericht](docs/plattformabnahme-v1.4.0.md).
 
 ## Was du bekommst
 
@@ -59,7 +59,7 @@ Unterlagen_Sichtung/
 └── bilder/              # Automatische Bilder bei wenig oder beschädigtem Text
 ```
 
-Byte-identische PDFs werden nur einmal indiziert. `check` beendet sich mit einem Fehlerstatus, wenn PDFs neu, geändert oder entfernt sind, Prüfsummen oder Markdown-Dateien fehlen oder Seitenabschnitte nicht stimmen.
+Byte-identische PDFs werden nur einmal indiziert. `check` beendet sich mit einem Fehlerstatus, wenn PDFs neu, geändert oder entfernt sind, der Seitenindex, Prüfsummen oder Markdown-Dateien fehlen oder Seitenabschnitte nicht stimmen.
 
 ### Wenn sich die Unterlagen ändern
 
@@ -116,7 +116,7 @@ In Codex den Skill über `$pdf-seitenweise-sichten` wählen. Claude Code, Antigr
 | Skill-Format | Formale Validierung des aktuellen Arbeitsstands bestanden; Details in [ARCHIVE.json](ARCHIVE.json). |
 | Dokumentation | [Vault-Prüfung](Obsidian-Plan/Pruefung/vault_pruefen.py) prüft Verknüpfungen, Erreichbarkeit und Manifest. [SHA256SUMS](SHA256SUMS) dokumentiert die aufgeführten Repository-Dateien. |
 | Reale Unterlagen | v1.3.0 wurde an CuD-Unterlagen und zwei weiteren PDF-Sätzen erprobt. Messgrundlage und Grenzen stehen in [Ist-Stand und Messung](Obsidian-Plan/20%20Ist-Stand%20und%20Messung.md). Diese Ergebnisse gelten nicht automatisch für spätere Änderungen. |
-| Offene Nachweise | Für die anschließenden Korrekturen fehlen erneute reale PDF-Messungen sowie vollständige Tests in den unterstützten Agent-Oberflächen. Ein Effizienzgewinn ist dafür noch nicht gemessen. |
+| Offene Nachweise | Synthetische Lesetests in Codex und Claude Code sind dokumentiert. Vollständige Endabnahmen aller fünf Agenten und erneute reale PDF-Messungen bleiben offen; siehe [Abnahmebericht](docs/plattformabnahme-v1.4.0.md). |
 
 Die Zustände **indiziert**, **als Text gelesen**, **im Originalbild angesehen** und **fachlich geprüft** bleiben getrennt. Erzeugte Bilder gelten nicht automatisch als angesehen. Auch eine Bildsichtung beweist keine mathematische Richtigkeit.
 
@@ -142,7 +142,7 @@ Die Tests erzeugen eigene kleine PDF-Dateien in einem temporären Verzeichnis; f
 | [Repository-Konfiguration](docs/repository-konfiguration.md) | Schutzregeln, CI-Berechtigungen und Release-Prüfweg |
 | [CHANGELOG.md](CHANGELOG.md) | Änderungen je Version |
 
-Version 1.3.1 umfasst die Verbesserungen aus v1.3.0 sowie die anschließenden Korrekturen und den neuen Besucher-Einstieg. Für eine festgelegte Installation `v1.3.1` auschecken. Die [Release-Action](.github/workflows/release.yml) prüft Selbsttest, Vault, Repository-Prüfsummen und Tag-Version, baut ein Skill-ZIP und legt einen Release-Entwurf an. Nach Download und Vergleich mit dem getaggten Quellstand wird dieser veröffentlicht.
+Version 1.4.0 ergänzt die portable Plattformbereitstellung, eindeutige Namen übernommener Bilder und die Prüfung auf einen fehlenden Seitenindex. Für eine festgelegte Installation `v1.4.0` auschecken. Die [Release-Action](.github/workflows/release.yml) prüft Selbsttest, Vault, Repository-Prüfsummen und Tag-Version, baut ein Skill-ZIP und legt einen Release-Entwurf an. Nach Download und Vergleich mit dem getaggten Quellstand wird dieser veröffentlicht.
 
 Im Release liegen das Skill-ZIP und eine separate `SHA256SUMS` für dessen Download. Die gleichnamige Datei im Repository prüft dagegen die darin aufgeführten Quelldateien. Der ZIP-Inhalt ist für die Skill-Installation gedacht; Dokumentation und Installationsskripte stehen im vollständigen Repository. Eine ZIP-Datei bestätigt noch keine Kompatibilität mit jeder Agent-Oberfläche.
 

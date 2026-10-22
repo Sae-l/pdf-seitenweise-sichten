@@ -29,14 +29,14 @@ Alle Ressourcenpfade sind relativ zum Ordner dieser `SKILL.md`. Ermittle den vom
 | Aufruf | Wirkung |
 | --- | --- |
 | `sichtung.py extract <pdf-ordner> <neuer-ordner> [--alt <alter-ordner>] [--titel "…"]` | Erzeugt `Seitenindex.md`, `manifest.json`, `md/<pdf>.md` mit `## PDF-Seite N` und `bilder/<pdf>-S###.png` für Seiten mit wenig oder beschädigtem Text. Byte-identische PDFs werden nur einmal indiziert. Bricht ab, wenn im Ziel schon ein Index liegt. `--alt` übernimmt Prüfstatus und bereits angesehene Bilder eines früheren Sichtungsordners, aber nur für unveränderte PDFs. |
-| `sichtung.py check <ordner>` | Prüft die Seitenfolge und meldet neue, fehlende oder geänderte PDFs sowie fehlende Markdown-Dateien und Prüfsummen. Fehler führen zu einem Exitcode ungleich null. |
+| `sichtung.py check <ordner>` | Prüft die Seitenfolge und meldet neue, fehlende oder geänderte PDFs sowie einen fehlenden Seitenindex, fehlende Markdown-Dateien und Prüfsummen. Fehler führen zu einem Exitcode ungleich null. |
 | `sichtung.py render <pdf> <N> <arbeitsordner> [--scale 3]` | Rendert nur PDF-Seite N als PNG. |
 
 Index: je PDF eine Überschrift mit Link zum Markdown, darunter eine Zeile pro Seite `- S. N: <Titel> [Flags]`. Der Titel sind die ersten aussagekräftigen Zeilen; Kopf-/Fußzeilen, die auf mindestens der Hälfte der Seiten stehen, und reine Seitenzahlen werden übersprungen. Flags: `[wenig Text]` (unter 80 Zeichen, meist Scan oder Abbildung), `[Zeichen prüfen]` (Ersatz- oder Privatzeichen in der Extraktion), `[Aufgabe/Beispiel]`, `[Endantworten-Abschnitt]` (ab der Zeile „Endantworten:“).
 
 `manifest.json` führt je Seite `text_read`, `original_image_viewed` und `subject_review`. Diese Felder nach jeder Sichtung aktualisieren; sie sind der Nachweis, was tatsächlich gelesen oder angesehen wurde.
 
-`--alt` übernimmt Status und Bilder nur bei gleicher vorhandener SHA-256-Prüfsumme. Fehlt die alte Prüfsumme, bleiben die neuen Seiten ungeprüft; trage keinen Hash nachträglich als Beleg einer früheren Sichtung ein. Ein leerer oder fehlender Quellordner wird abgewiesen. Ein vorhandener Index oder ein vorhandenes Manifest wird nicht überschrieben.
+`--alt` übernimmt Status und Bilder nur bei gleicher vorhandener SHA-256-Prüfsumme. Übernommene Bilder erhalten einen eindeutigen Namen aus PDF-Dateistamm und Seitennummer; die Dateiendung bleibt erhalten. Fehlt die alte Prüfsumme, bleiben die neuen Seiten ungeprüft; trage keinen Hash nachträglich als Beleg einer früheren Sichtung ein. Ein leerer oder fehlender Quellordner wird abgewiesen. Ein vorhandener Index oder ein vorhandenes Manifest wird nicht überschrieben.
 
 Bei vorhandenem Index zuerst `check` ausführen. Ein veralteter Index oder neue PDFs im Ordner: in einen neuen Ordner mit `--alt <bisheriger Ordner>` extrahieren, vergleichen, dann übernehmen.
 

@@ -4,7 +4,7 @@ description: "Bereitstellung für Codex, Claude Code, Antigravity, VS Code/Copil
 type: referenz
 language: de
 created: 2026-10-22
-updated: 2026-10-22
+updated: 2026-10-23
 status: teilweise-geprüft
 tags: ["pdf-sichtung", "installation"]
 ---
@@ -46,7 +46,7 @@ Dieses Repository enthält einen GitHub-Einstieg unter `.github/skills/pdf-seite
 | Portable Ausführung | `python scripts/plattformtest.py` | Beide Projektpakete extrahieren, prüfen und rendern aus einem anderen Arbeitsverzeichnis; Unicode/Leerzeichen und Konfliktschutz geprüft |
 | Native Installer | Derselbe Plattformtest auf Windows/Linux | Junctions/Symlinks, Wiederholbarkeit und Schutz vorhandener Kopien; CI darf keine Tests überspringen |
 | Copilot-Setup | Workflow `Copilot Setup Steps` | Python-Abhängigkeiten und technische Tests ausführbar; keine Bestätigung eines echten Copilot-Auftrags |
-| Agent-Endabnahme | Ein belegter Testauftrag je Zielumgebung | Noch offen; Produkt-/Agentversion, Aktivierung, Quellenzugriff, Bildsichtung und Ergebnis dokumentieren |
+| Agent-Endabnahme | Ein belegter Testauftrag je Zielumgebung | Synthetische Lesetests in Codex und Claude Code durchgeführt; vollständige Endabnahme aller Zielumgebungen offen. [Abnahmebericht v1.4.0](../docs/plattformabnahme-v1.4.0.md) |
 
 Die lokale Windows-Ausführungsrichtlinie sperrt aktuell `.ps1`-Dateien. Die beiden nativen Installer-Tests werden hier ausdrücklich übersprungen; die portable Python-Projektinstallation funktioniert unabhängig davon. Sicherheitsrichtlinien werden nicht umgangen. CI-Nachweise sind anhand des jeweiligen Commit-Laufs zu prüfen.
 

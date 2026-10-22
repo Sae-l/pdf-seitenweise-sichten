@@ -1,21 +1,21 @@
 {
   "name": "pdf-seitenweise-sichten",
-  "version": "1.3.1+unreleased",
-  "date": "2026-10-22",
+  "version": "1.4.0",
+  "date": "2026-10-23",
   "owner": "Sae-l",
   "source": "Installed Codex skill, created in the Formelsammlung project",
-  "skill_sha256": "8b47a949e24555e2916eb59698daecb60c51640c8232c9e5c9da763328473673",
+  "skill_sha256": "db63e7ad486f9add33809df20b964d0849119a909c5a3703e90eb95636c10c98",
   "checks": {
-    "formal_validation": "PASS (quick_validate.py, current worktree, 2026-10-22)",
+    "formal_validation": "PASS (root and GitHub entry, quick_validate.py, 2026-10-23)",
     "installed_copy_byte_equality": "NOT_PERFORMED (release does not modify local skill installations)",
     "observed_workflow": "P2 PDF page 9 and eight selected pages in five example documents",
     "independent_comprehensive_behavior_test": "NOT_PERFORMED",
     "complete_formula_verification": "NOT_PERFORMED",
     "archive_line_endings": "Automatic Git text conversion disabled via .gitattributes",
-    "bundled_script_selftest": "PASS (2026-10-22; synthetic regression tests incl. missing hash, new/deleted PDFs, page sequence, missing Markdown, empty source and manifest protection)",
+    "bundled_script_selftest": "PASS (2026-10-23; includes missing index and collision of adopted image names, byte equality and status preservation)",
     "real_document_test_1_3_0": "PASS (CuD Referenz 6 PDFs/83 S. via Obsidian-Plan/Pruefung/messen.py; Fersch 244 S. + FOSA 40 S. extract)",
     "real_document_test_current_worktree": "NOT_PERFORMED (real_document_test_1_3_0 describes the earlier version)",
-    "platform_provisioning": "Technical tests in scripts/plattformtest.py; native agent acceptance remains NOT_PERFORMED",
-    "native_agent_acceptance": "NOT_PERFORMED (Codex, Claude Code, Antigravity, VS Code/Copilot, GitHub Copilot Cloud)"
+    "platform_provisioning": "scripts/plattformtest.py: four portable tests PASS locally; two native PowerShell tests skipped by local execution policy; Windows/Linux CI requires all six",
+    "native_agent_acceptance": "PARTIAL (Codex Desktop manual and Claude Code 2.1.300 read-only synthetic smoke tests; full five-agent acceptance remains open; docs/plattformabnahme-v1.4.0.md)"
   }
 }
