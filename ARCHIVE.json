@@ -1,16 +1,18 @@
 {
   "name": "pdf-seitenweise-sichten",
-  "version": "1.1.0",
-  "date": "2026-10-13",
+  "version": "1.2.0",
+  "date": "2026-10-22",
   "owner": "Sae-l",
   "source": "Installed Codex skill, created in the Formelsammlung project",
-  "skill_sha256": "da8bd90fbc9ef636d3f3c8c19e1245bfe590c15a5bb3549c1b3121091642bd21",
+  "skill_sha256": "11cf02660b52b633e438c815e51af388aa68a94de94cef40d4cfa79134ab8ce5",
   "checks": {
-    "formal_validation": "PASS (quick_validate.py, 1.1.0)",
-    "installed_copy_byte_equality": "NOT_YET (1.1.0 not installed)",
+    "formal_validation": "PASS (quick_validate.py, 1.2.0)",
+    "installed_copy_byte_equality": "NOT_YET (1.2.0 not installed)",
     "observed_workflow": "P2 PDF page 9 and eight selected pages in five example documents",
     "independent_comprehensive_behavior_test": "NOT_PERFORMED",
     "complete_formula_verification": "NOT_PERFORMED",
-    "archive_line_endings": "Automatic Git text conversion disabled via .gitattributes"
+    "archive_line_endings": "Automatic Git text conversion disabled via .gitattributes",
+    "bundled_script_selftest": "PASS (scripts/selbsttest.py, synthetic PDF)",
+    "real_document_test_1_2_0": "NOT_PERFORMED"
   }
 }
