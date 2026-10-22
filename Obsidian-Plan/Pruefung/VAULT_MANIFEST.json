@@ -4,8 +4,8 @@
   "files": [
     {
       "path": "00 Start.md",
-      "bytes": 1625,
-      "sha256": "64b3297bf8c250c4edd0f634bafaf74af4545d8bae833c8fd93776ffa009a3c4"
+      "bytes": 1652,
+      "sha256": "48304a23c2e3246551c34a2c6462c0f2a2002a442f1a2917ece779ec2f8d6397"
     },
     {
       "path": "10 Ziel und Erfolgskriterien.md",
@@ -24,8 +24,8 @@
     },
     {
       "path": "31 Plattformen und Installation.md",
-      "bytes": 5802,
-      "sha256": "ed355343a901928a21015abfc976e564b46771a1fdff216577972af79e16d059"
+      "bytes": 5874,
+      "sha256": "9a349654cde353301702efa9e4ac902f930cad23e6f4680264f3c6a3afb99492"
     },
     {
       "path": "40 Entscheidungen.md",

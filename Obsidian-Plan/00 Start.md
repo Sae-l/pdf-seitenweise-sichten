@@ -4,7 +4,7 @@ description: "Einstieg in den Plan für pdf-seitenweise-sichten: Ziel, gemessene
 type: moc
 language: de
 created: 2026-10-22
-updated: 2026-10-22
+updated: 2026-10-23
 status: aktiv
 tags: ["pdf-sichtung", "moc"]
 ---
@@ -12,7 +12,7 @@ tags: ["pdf-sichtung", "moc"]
 # pdf-seitenweise-sichten – Plan und Nachweise
 
 > [!todo] Nächste Aktion
-> v1.3.0 und die Korrekturen aus PR #10 sind auf `main`. Der Release-Stand v1.3.1 bündelt sie mit einer geprüften Paketierung. Den aktuellen Veröffentlichungsstatus zeigt [GitHub Releases](https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.3.1); lokale Installation bleibt Schritt 6 in [[30 Plan v1.3.0]].
+> v1.4.0 bündelt portable Plattformpakete und beide Audit-Korrekturen mit Regressionstests. [Release und Download](https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.4.0) · [Plattformabnahme](../docs/plattformabnahme-v1.4.0.md). Vollständige Agent-Endabnahmen bleiben teilweise offen; Details in [[31 Plattformen und Installation]].
 
 > [!info] Stand 22.10.2026
 > v1.3.0 gebaut und am CuD-Satz gemessen: E1–E5 erfüllt (siehe [[20 Ist-Stand und Messung]]). Weiterentwicklung danach: Karte [PDF-Pipeline über v1.3.0 hinaus](https://github.com/Sae-l/pdf-seitenweise-sichten/issues/3).

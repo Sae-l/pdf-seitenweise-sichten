@@ -1,6 +1,10 @@
 # Änderungen
 
-## Unveröffentlicht — 2026-10-22
+## 1.4.0 — 2026-10-23
+
+- Zwei Audit-Fehler mit Regressionstests korrigiert: Übernommene Bilder erhalten PDF-/Seiten-spezifische Zielnamen und überschreiben keine Bilder anderer Dokumente mit gleichem alten Basisnamen. Die Bildbytes und Prüfmarken bleiben erhalten.
+- `check` weist einen fehlenden `Seitenindex.md` mit Fehlerstatus ab.
+- Plattformprüfung und synthetische Lesetests in Codex/Claude Code dokumentiert; vollständige Agent-Endabnahmen werden getrennt als offen ausgewiesen.
 
 - Portable Projektinstallation mit vollständigen Skill-Kopien unter `.agents/skills/` und `.claude/skills/` für Codex, Claude Code, Antigravity, VS Code/Copilot und GitHub Copilot.
 - Globalen Antigravity-CLI-Pfad ergänzt. Native Installer wiederholbar; bestehende Kopien und fremde Links bleiben unverändert und melden einen Konflikt.

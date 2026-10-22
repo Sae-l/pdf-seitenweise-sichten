@@ -4,6 +4,7 @@ import json, shutil, subprocess, sys, tempfile
 from pathlib import Path
 
 from reportlab.pdfgen import canvas
+from PIL import Image
 
 SKRIPT = Path(__file__).with_name("sichtung.py")
 
@@ -53,6 +54,11 @@ with tempfile.TemporaryDirectory() as tmp:
     assert lauf("extract", quelle, tmp / "out").returncode != 0, "bestehender Index wurde nicht geschützt"
     assert lauf("check", tmp / "out").returncode == 0
 
+    (tmp / "out" / "Seitenindex.md").unlink()
+    r = lauf("check", tmp / "out")
+    assert r.returncode != 0 and "Seitenindex.md" in r.stdout, "fehlender Seitenindex übersehen"
+    (tmp / "out" / "Seitenindex.md").write_text(index, encoding="utf-8")
+
     shutil.copy(pdf, quelle / "Neu.pdf")
     r = lauf("check", tmp / "out")
     assert r.returncode != 0 and "Neu.pdf" in r.stdout, r.stdout
@@ -81,7 +87,7 @@ with tempfile.TemporaryDirectory() as tmp:
     assert r.returncode == 0 and "Prüfstände übernommen" in r.stdout, r.stdout + r.stderr
     neu = next(d for d in json.loads((tmp / "neu" / "manifest.json").read_text(encoding="utf-8")) if "page_index" in d)
     assert neu["page_index"][1]["text_read"] is True and neu["page_index"][1]["original_image_viewed"] is True
-    assert (tmp / "neu" / "bilder" / "hand-S002.png").read_bytes() == b"png"
+    assert (tmp / "neu" / neu["page_index"][1]["image"]).read_bytes() == b"png"
 
     # Ohne alte Prüfsumme gibt es keinen Beleg für unveränderte Quellen.
     ohne_hash = json.loads((tmp / "out" / "manifest.json").read_text(encoding="utf-8"))
@@ -94,7 +100,7 @@ with tempfile.TemporaryDirectory() as tmp:
     ohne = next(d for d in json.loads((tmp / "ohne_hash" / "manifest.json").read_text(encoding="utf-8")) if "page_index" in d)
     assert ohne["page_index"][1]["text_read"] is False
     assert ohne["page_index"][1]["original_image_viewed"] is False
-    assert not (tmp / "ohne_hash" / "bilder" / "hand-S002.png").exists()
+    assert (tmp / "ohne_hash" / ohne["page_index"][1]["image"]).read_bytes() != b"png"
 
     # Geändertes PDF: check meldet VERALTET, alter Prüfstatus wird nicht übernommen
     pdf.write_bytes(pdf.read_bytes() + b"\n%geaendert\n")
@@ -111,5 +117,35 @@ with tempfile.TemporaryDirectory() as tmp:
 
     pdf.unlink()
     assert lauf("check", tmp / "neu2").returncode != 0, "entfernte PDF übersehen"
+
+    # Gleiche alte Bildnamen verschiedener PDFs dürfen einander nicht überschreiben.
+    collision_source = tmp / "bildquellen"
+    collision_source.mkdir()
+    for name in ("A", "B"):
+        c = canvas.Canvas(str(collision_source / f"{name}.pdf"))
+        c.drawString(72, 750, f"Dokument {name}")
+        c.showPage()
+        c.save()
+    old = tmp / "alte_bilder"
+    r = lauf("extract", collision_source, old)
+    assert r.returncode == 0, r.stdout + r.stderr
+    old_records = json.loads((old / "manifest.json").read_text(encoding="utf-8"))
+    expected = {}
+    for doc, color in zip(old_records, ("red", "blue")):
+        image = old / doc["pdf"] / "page.png"
+        image.parent.mkdir()
+        Image.new("RGB", (2, 2), color).save(image)
+        expected[doc["pdf"]] = image.read_bytes()
+        doc["page_index"][0].update(image=image.relative_to(old).as_posix(), original_image_viewed=True)
+    (old / "manifest.json").write_text(json.dumps(old_records), encoding="utf-8")
+    new = tmp / "neue_bilder"
+    r = lauf("extract", collision_source, new, "--alt", old)
+    assert r.returncode == 0, r.stdout + r.stderr
+    new_records = json.loads((new / "manifest.json").read_text(encoding="utf-8"))
+    assert len({d["page_index"][0]["image"] for d in new_records}) == 2, "übernommene Bilder kollidieren"
+    for doc in new_records:
+        page = doc["page_index"][0]
+        assert page["original_image_viewed"] is True
+        assert (new / page["image"]).read_bytes() == expected[doc["pdf"]], "übernommenes Bild verändert"
 
 print("Selbsttest bestanden")

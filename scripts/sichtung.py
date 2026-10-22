@@ -98,7 +98,7 @@ def extract(quelle, ziel, alt_ordner=None, ueberschrift=None):
                 status.update(alt_status)
                 uebernommen += 1
                 if alt_bild and alt_bild.is_file():  # bereits angesehenes Bild hat Vorrang vor neuem Rendern
-                    image = f"bilder/{alt_bild.name}"
+                    image = f"bilder/{source.stem}-S{number:03}{alt_bild.suffix}"
                     (ziel / image).write_bytes(alt_bild.read_bytes())
             if image is None and (thin or damaged):
                 image = f"bilder/{source.stem}-S{number:03}.png"
@@ -125,6 +125,8 @@ def check(ziel, quelle=None):
     """Abschnitte gegen Seitenzahl und PDF-Hashes gegen das Manifest prüfen; gibt Anzahl Probleme zurück."""
     ziel = Path(ziel)
     probleme = 0
+    if not (ziel / "Seitenindex.md").is_file():
+        print("FEHLER: Seitenindex.md fehlt"); probleme += 1
     records = json.loads((ziel / "manifest.json").read_text(encoding="utf-8"))
     if not records:
         print("FEHLER: Manifest enthält keine PDFs")
