@@ -1,11 +1,11 @@
 {
   "format": 1,
-  "date": "2026-10-22",
+  "date": "2026-10-24",
   "files": [
     {
       "path": "00 Start.md",
-      "bytes": 1652,
-      "sha256": "48304a23c2e3246551c34a2c6462c0f2a2002a442f1a2917ece779ec2f8d6397"
+      "bytes": 1877,
+      "sha256": "b7b7dbf43dd4d2c293d641ced929a4070d69598423b81f2954f5eb89a9211a0e"
     },
     {
       "path": "10 Ziel und Erfolgskriterien.md",
@@ -24,8 +24,8 @@
     },
     {
       "path": "31 Plattformen und Installation.md",
-      "bytes": 5874,
-      "sha256": "9a349654cde353301702efa9e4ac902f930cad23e6f4680264f3c6a3afb99492"
+      "bytes": 6229,
+      "sha256": "4739138946d7530330ed1ae19950a384e1566a2147a35daf6ace3b1cd3d5dfc0"
     },
     {
       "path": "40 Entscheidungen.md",
@@ -34,8 +34,8 @@
     },
     {
       "path": "50 Parkplatz.md",
-      "bytes": 1466,
-      "sha256": "672883fcf2942bd64e9077d959b146b3804c356fa9c02d8049064b881926324c"
+      "bytes": 1770,
+      "sha256": "3631ec3fcbbe965dfb1ea567be1b845587dfd954c2ac5281346a5b08f8205339"
     },
     {
       "path": "90 Nachweise/91 Quellen und Prüfwege.md",
