@@ -1,172 +1,121 @@
 # PDF-Unterlagen gezielt sichten
 
-**Die richtige Seite finden. Den relevanten Text lesen. Am Original prüfen.**
+**Die passende Seite finden. Text und Bilder prüfen. Inhalte mit Quellen weiterverwenden.**
 
-Ein Agent-Skill mit lokalem Python-Werkzeug für Vorlesungsfolien, Übungsblätter und Formelsammlungen. Ein kompakter Seitenindex führt zur Quelle, ohne den gesamten PDF-Volltext in den Gesprächskontext zu laden.
+Ein lokales Python-Werkzeug und Agent-Skill für Vorlesungsfolien, Übungsblätter und Formelsammlungen. Für alle, die aus umfangreichen PDFs gezielt Wissen erschließen möchten, ohne jedes Mal das ganze Dokument in den KI-Kontext zu laden.
 
-![Drei Schritte: im Seitenindex finden, einen Textabschnitt lesen und Formeln oder Abbildungen an der Originalseite prüfen.](docs/assets/ablauf.svg)
+![Vom kompakten Seitenindex zum relevanten Text und zur Prüfung an der Originalseite.](docs/assets/ablauf.svg)
 
-[Schnellstart](#schnellstart) · [Als Skill nutzen](#als-skill-nutzen) · [Prüfstand](#prüfstand) · [Änderungen](CHANGELOG.md) · [MIT-Lizenz](LICENSE)
+<p align="center">
+  <a href="https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.5.0"><strong>v1.5.0 herunterladen</strong></a> ·
+  <a href="#schnellstart">Schnellstart</a> ·
+  <a href="references/gezielte-nutzung.md">Nutzungsbeispiele</a> ·
+  <a href="#prüfstand">Prüfnachweise</a>
+</p>
 
-**Version 1.5.0:** [Release und Skill-ZIP](https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.5.0) · [Release-Hinweise](docs/releases/v1.5.0.md)
+<p align="center">
+  <a href="https://github.com/Sae-l/pdf-seitenweise-sichten/actions/workflows/checks.yml"><img src="https://github.com/Sae-l/pdf-seitenweise-sichten/actions/workflows/checks.yml/badge.svg?branch=main" alt="Aktueller Status der Windows- und Linux-CI" /></a>
+</p>
 
-**Neu in 1.5.0:** begrenzte Suche, seitenweises Lesen, getrennte Arbeitsfassungen und erweiterte Integritätsprüfung. Bestehende Installationen werden nicht automatisch aktualisiert. Anleitung: [Gezielte Nutzung](references/gezielte-nutzung.md), Messungen und Grenzen: [Umsetzungsnachweis](docs/umsetzung-pdf-werkzeug-2026-10-24.md).
+## Weniger suchen. Gezielter arbeiten.
 
-Das Release baut auf der portablen Projektinstallation auf und ergänzt die gezielte PDF-Nutzung. Die [Umsetzungsnachweise](docs/umsetzung-pdf-werkzeug-2026-10-24.md) trennen lokale Prüfungen, Bildstichproben und offene Agent-Endabnahmen; der [Abnahmebericht zu v1.4.0](docs/plattformabnahme-v1.4.0.md) bleibt ein historischer Nachweis.
-
-## Was du bekommst
-
-| Nutzen | Umsetzung |
+| Dein Vorhaben | Was das Werkzeug liefert |
 | --- | --- |
-| Gezielter Kontext | Ein Seitenindex und Markdown mit eindeutig nummerierten PDF-Seiten statt ungezieltem Volltextimport. |
-| Nachvollziehbare Aussagen | Dokument und PDF-Seite als Quelle; Formeln, Tabellen und Zeichnungen werden am Original geprüft. |
-| Wiederverwendbare Arbeit | SHA-256 erkennt geänderte PDFs. `--alt` übernimmt Sichtungsnachweise nur bei identischem vorhandenem Hash. |
-| Geschützte Ergebnisse | Originale werden nur gelesen. Vorhandene Indizes und Manifeste werden nicht überschrieben. |
-| Lokale Verarbeitung | Das Python-Werkzeug extrahiert und rendert lokal, ohne einen Cloud-Dienst aufzurufen. |
+| Eine Erklärung oder Aufgabe finden | Wenige kurze Treffer mit Dokument und PDF-Seite; auch für Angaben wie „Aufgabe 9“. |
+| Text, Formeln und Diagramme verstehen | Einzelne Textseiten und bei Bedarf das gerenderte Originalbild. |
+| Inhalte weiterverwenden | Getrennte Arbeitsfassungen als Markdown, LaTeX, CSV oder Bilddatei mit Quellenbezug. |
+| Später mit denselben Unterlagen arbeiten | Prüfung auf geänderte Quellen und Wiederverwendung unveränderter Ergebnisse. |
 
-**Zwei Bausteine:** [SKILL.md](SKILL.md) steuert die Arbeit eines Agenten. [scripts/sichtung.py](scripts/sichtung.py) erledigt Extraktion, Prüfung und Rendering und funktioniert auch ohne Agent. Welche Inhalte ein Agent an seinen Anbieter sendet, hängt von dessen Umgebung ab.
+**Zwei Bausteine, ein Ablauf:** Das [Python-Werkzeug](scripts/sichtung.py) erledigt Suche, Extraktion und Integritätsprüfung. Der [Skill](SKILL.md) führt einen Agenten durch Auswahl, Originalabgleich und Quellenangaben. Das Werkzeug funktioniert auch ohne KI.
 
 ## Schnellstart
 
-Voraussetzungen: Git und Python 3.12 oder neuer. Die CI ist für Python 3.12 auf Windows und Linux eingerichtet; den tatsächlichen Laufstatus zeigt [GitHub Actions](https://github.com/Sae-l/pdf-seitenweise-sichten/actions/workflows/checks.yml).
+Du brauchst **Python 3.12 oder neuer** und Git. Unter macOS/Linux gegebenenfalls `python3` verwenden.
 
 ```sh
-git clone https://github.com/Sae-l/pdf-seitenweise-sichten.git
+git clone --branch v1.5.0 --depth 1 https://github.com/Sae-l/pdf-seitenweise-sichten.git
 cd pdf-seitenweise-sichten
 python -m pip install -r scripts/requirements.txt
 ```
 
-Unter macOS/Linux gegebenenfalls `python3` statt `python` verwenden. Ein vorhandenes virtuelles Python-Environment kann direkt genutzt werden.
-
-Lege die PDFs eines Themenbereichs in einen Quellordner. Die folgenden Befehle laufen im geklonten Repository; passe die beiden Beispielpfade an:
+Lege eigene PDFs in einen Ordner, beispielsweise `../Unterlagen`. Danach:
 
 ```sh
-# 1. Einen neuen Sichtungsordner erzeugen
+# Einmal lokal erschließen; einen neuen Ausgabeordner verwenden.
 python scripts/sichtung.py extract "../Unterlagen" "../Unterlagen_Sichtung"
 
-# 2. Aktualität und Seitenfolge prüfen
-python scripts/sichtung.py check "../Unterlagen_Sichtung"
-
-# 3. Bei Bedarf nur PDF-Seite 7 rendern
-python scripts/sichtung.py render "../Unterlagen/Mechanik.pdf" 7 "../Arbeitsbilder" --scale 3
-```
-
-Der Quellordner wird unmittelbar nach PDFs durchsucht, ohne Unterordner rekursiv zu verarbeiten. Verwende für die Ausgabe einen eigenen Ordner außerhalb der Quellen.
-
-```text
-Unterlagen_Sichtung/
-├── Seitenindex.md       # Dokumente, Seitenvorschau und Warnhinweise
-├── manifest.json        # PDF-Hashes und Sichtungsstatus je Seite
-├── md/                  # Extrahierter Text mit „## PDF-Seite N“
-└── bilder/              # Automatische Bilder bei wenig oder beschädigtem Text
-```
-
-Byte-identische PDFs werden nur einmal indiziert. `check` beendet sich mit einem Fehlerstatus, wenn PDFs neu, geändert oder entfernt sind, der Seitenindex, Prüfsummen oder Markdown-Dateien fehlen oder Seitenabschnitte nicht stimmen.
-
-### Gezielt suchen, lesen und wiederverwenden
-
-```sh
+# Gezielt suchen, statt das gesamte Dokument zu laden.
 python scripts/sichtung.py search "../Unterlagen_Sichtung" "Kraft Beschleunigung"
-python scripts/sichtung.py read "../Unterlagen_Sichtung" "Mechanik.pdf" 7
-python scripts/sichtung.py save "../Unterlagen_Sichtung" "Mechanik.pdf" 7 "Kraft.md" --status original-geprüft
-python scripts/sichtung.py read "../Unterlagen_Sichtung" "Mechanik.pdf" 7 --arbeitsfassung
 ```
 
-Die Arbeitsdatei `Kraft.md` vorher anhand der Quelle erstellen; das Werkzeug erzeugt oder bestätigt ihren Inhalt nicht selbst. Auch Text, CSV, LaTeX, PNG und JPEG sind möglich. `save` speichert die Datei mit Quellen- und Inhaltshashes und schützt vorhandene Arbeitsfassungen. Es setzt keine Sichtungsmarken automatisch.
-
-`search` gibt standardmäßig höchstens fünf kurze Treffer aus. `read` liefert eine Seite, bei mehr als 12 000 Zeichen mit ausdrücklicher Fortsetzungsposition. Beide prüfen den Bestand vorher. Lösungsbereiche bleiben standardmäßig ausgeblendet; `--mit-antworten` bezieht sie ausdrücklich ein. Die Erkennung ist heuristisch und ersetzt keinen sorgfältigen Umgang mit ungekennzeichneten Lösungen oder ganzen Seitenbildern. Scans und Bildinhalte sind ohne passenden Text nicht zuverlässig durchsuchbar.
-
-Der erweiterte `check` prüft auch Manifest-/Index-Seitenlisten, tatsächliche PDF-Seitenzahlen, Bildpfade und Markdown-Linkziele. Neue Extraktionen schützen zusätzlich ihren Rohtext per SHA-256; ältere Bestände erhalten einen Hinweis auf den fehlenden Rohtextnachweis. Korrekturen gehören in die getrennte Arbeitsfassung. `render` verwendet unveränderte Bilder anhand eines JSON-Nachweises erneut und überschreibt abweichende bestehende Bilder nicht; dann einen neuen Bildordner wählen.
-
-### Wenn sich die Unterlagen ändern
+Die Treffer nennen Datei und PDF-Seite. Mit diesen Werten lesen:
 
 ```sh
-python scripts/sichtung.py extract "../Unterlagen" "../Unterlagen_Sichtung_neu" --alt "../Unterlagen_Sichtung"
+# Beispiel: Dateiname und Seite durch einen tatsächlichen Treffer ersetzen.
+python scripts/sichtung.py read "../Unterlagen_Sichtung" "Mechanik.pdf" 7
 ```
 
-Vergleiche die neue Ausgabe mit der bisherigen, bevor du sie übernimmst. Ohne alten Hash werden keine alten Prüfmarken oder Bilder übernommen. Die alte Ausgabe bleibt erhalten.
+Die Originale bleiben erhalten. PDFs werden direkt im angegebenen Quellordner gesucht; Unterordner werden nicht automatisch mitextrahiert. [Installation, ZIP-Nutzung und Updates →](docs/installation.md)
 
-## Als Skill nutzen
+## Mit deinem Agenten nutzen
 
-### Empfohlen: portabel im Zielprojekt
+Installiere den Skill aus dem geklonten Repository in ein **bereits vorhandenes Zielprojekt**:
 
 ```sh
 python scripts/install_projekt.py "../Mein-Projekt"
 ```
 
-Das vorhandene Zielprojekt erhält zwei eigenständige Skill-Kopien: `.agents/skills/pdf-seitenweise-sichten/` für Codex, Antigravity, VS Code/Copilot und GitHub Copilot sowie `.claude/skills/pdf-seitenweise-sichten/` für Claude Code. Beide enthalten Anweisungen, Skripte und Referenzen. Bestehende Ziele führen zum Abbruch; Updates erst vergleichen und sichern. Die Kopien aktualisieren sich nicht durch `git pull` im ursprünglichen Klon.
+Der Installer erzeugt vollständige Kopien unter `.agents/skills/` und `.claude/skills/`. Bestehende Kopien werden geschützt. Bereitstellung ist für Codex, Claude Code, Antigravity und Copilot beschrieben; vollständige Agent-Endabnahmen bleiben getrennt von den technischen Tests.
 
-Für GitHub Copilot Cloud die erzeugten Skill-Dateien im Zielrepository committen und die Python-Abhängigkeiten in dessen Agent-Umgebung installieren. Globale Verknüpfungen und Laufwerkspfade deines Rechners sind in der Cloud nicht verfügbar. Dieses Repository bringt dafür einen schlanken `.github/skills/`-Einstieg und [Copilot-Setup-Schritte](.github/workflows/copilot-setup-steps.yml) mit. Das Setup anderer Projekte muss deren bestehende Abhängigkeiten berücksichtigen; es wird nicht automatisch überschrieben.
-
-### Alternativ: ein lokaler Klon für mehrere Werkzeuge
-
-Ein Klon kann mit den Skill-Verzeichnissen mehrerer lokaler Werkzeuge verknüpft werden:
-
-| System | Im Repository ausführen |
-| --- | --- |
-| Windows | `powershell -File install.ps1` |
-| macOS / Linux | `bash install.sh` |
-
-Die Skripte verknüpfen nach `~/.claude/skills/`, `~/.agents/skills/`, `~/.gemini/config/skills/` (Antigravity App/IDE) und `~/.gemini/antigravity-cli/skills/` (Antigravity CLI). Bestehende passende Verknüpfungen sind wiederverwendbar. Echte Kopien und fremde Verknüpfungen bleiben unverändert und führen zu einem Fehlerstatus. Eine ältere Installation unter `~/.codex/skills/` separat prüfen, damit keine veraltete Kopie geladen wird. Die Python-Abhängigkeiten werden über den Schnellstart installiert.
-
-Wenn Windows `.ps1` blockiert, nutze die portable Python-Projektinstallation. Ändere dafür keine Ausführungsrichtlinie. Welche Pfade und Funktionen dein Werkzeug unterstützt, ist in [Plattformen und Installation](Obsidian-Plan/31%20Plattformen%20und%20Installation.md) mit offiziellen Quellen und dem jeweiligen Prüfstand dokumentiert.
-
-Beispielauftrag nach dem Laden des Skills:
+Beispielauftrag nach dem Aktivieren des Skills:
 
 ```text
-$pdf-seitenweise-sichten
-Finde in ../Unterlagen die Aufgabe zum schiefen Wurf.
-Nenne Dokument, PDF-Seite und Aufgabennummer. Prüfe die Formel
-am Originalbild und verrate noch keine Endantwort.
+Finde die Aufgabe zum schiefen Wurf in meinen Unterlagen.
+Nenne Dokument, PDF-Seite und Aufgabennummer.
+Prüfe Formeln am Originalbild und verrate keine Endantwort.
 ```
 
-In Codex den Skill über `$pdf-seitenweise-sichten` wählen. Claude Code, Antigravity und VS Code/Copilot unterstützen `/pdf-seitenweise-sichten`. In GitHub Copilot den Skill-Namen und den Auftrag ausdrücklich nennen. Die verfügbaren Werkzeuge und Berechtigungen der jeweiligen Agent-Umgebung bleiben Voraussetzung; ein geladener Skill allein bestätigt keine Bildsichtung.
+Aktivierung, globale Verknüpfungen und Cloud-Voraussetzungen stehen in der [Installationsanleitung](docs/installation.md).
 
-`git pull` im Klon aktualisiert verknüpfte Installationen gemeinsam. Für einen festgelegten Stand einen geprüften Commit oder vorhandenen Tag verwenden.
+## Von der Quelle zur Arbeitsfassung
+
+**Suchen → Seite lesen → Original ansehen → benötigte Inhalte speichern.**
+
+`search` liefert standardmäßig höchstens fünf kurze Treffer. `read` liest die gewählte Seite mit sichtbarer Fortsetzung bei langen Texten. Für Formeln, Tabellen und Diagramme folgt die tatsächliche Bildansicht. Anschließend kann `save` eine selbst erstellte Arbeitsfassung mit Quellen- und Inhaltshashes sichern.
+
+| Befehl | Aufgabe |
+| --- | --- |
+| `extract` | PDFs lokal erschließen und einen Seitenindex anlegen |
+| `search` / `read` | Passende Inhalte finden und einzelne Seiten lesen |
+| `render` | Eine Originalseite als Bild bereitstellen |
+| `save` | Eine aufbereitete Datei mit Quelle und Prüfstatus speichern |
+| `check` | Quellen, Seitenlisten, Links und Bildreferenzen technisch prüfen |
+
+Die [Nutzungsbeispiele](references/gezielte-nutzung.md) zeigen den vollständigen Ablauf einschließlich Wiederverwendung und Lösungsschutz.
 
 ## Prüfstand
 
-| Bereich | Nachweis und Grenze |
-| --- | --- |
-| Automatische Tests | [Selbsttest](scripts/selbsttest.py): Extraktion, Duplikate, Rendering, Änderungsprüfung, Statusübernahme und Schutz vorhandener Ergebnisse. Die [CI](.github/workflows/checks.yml) ist für Windows und Linux eingerichtet. |
-| Plattformbereitstellung | [Plattformtest](scripts/plattformtest.py): portable Pakete, Ausführung aus anderem Arbeitsordner, native Installer, Wiederholung und Konfliktschutz. In der CI dürfen diese Tests nicht übersprungen werden. Das ersetzt keine Endabnahme in den fünf Agent-Oberflächen. |
-| Skill-Format | Formale Validierung des aktuellen Arbeitsstands bestanden; Details in [ARCHIVE.json](ARCHIVE.json). |
-| Dokumentation | [Vault-Prüfung](Obsidian-Plan/Pruefung/vault_pruefen.py) prüft Verknüpfungen, Erreichbarkeit und Manifest. [SHA256SUMS](SHA256SUMS) dokumentiert die aufgeführten Repository-Dateien. |
-| Reale Unterlagen | v1.5.0: 27 MPG1-PDFs/218 Seiten, fünf feste Suchfälle und zwei Bildstichproben; [Messung und Grenzen](docs/umsetzung-pdf-werkzeug-2026-10-24.md). Der frühere [CuD-Vergleich](Obsidian-Plan/20%20Ist-Stand%20und%20Messung.md) gilt weiterhin nur für v1.3.0. |
-| Offene Nachweise | Vollständige Endabnahmen aller fünf Agenten, umfassende fachliche Prüfung und tatsächliche Modelltokenmessungen bleiben offen. Historische Agent-Lesetests: [Abnahmebericht v1.4.0](docs/plattformabnahme-v1.4.0.md). |
+- **Automatisierte Technik:** Selbsttest, portable Installation, Vault, Syntax und Prüfsummen werden auf Windows und Linux geprüft. [GitHub Actions](https://github.com/Sae-l/pdf-seitenweise-sichten/actions/workflows/checks.yml)
+- **Reale Unterlagen:** 27 MPG1-PDFs mit 218 Seiten neu extrahiert und geprüft; fünf festgelegte Suchfälle, zwei tatsächlich betrachtete Originalseiten und eine wiederverwendete Formel-Arbeitsfassung. [Messung und Grenzen](docs/umsetzung-pdf-werkzeug-2026-10-24.md)
+- **Paketintegrität:** Das Release enthält das Skill-ZIP und dessen SHA-256-Datei. Die [Repository-Prüfsummen](SHA256SUMS) betreffen dagegen die aufgeführten Quelldateien.
 
-Die Zustände **indiziert**, **als Text gelesen**, **im Originalbild angesehen** und **fachlich geprüft** bleiben getrennt. Erzeugte Bilder gelten nicht automatisch als angesehen. Auch eine Bildsichtung beweist keine mathematische Richtigkeit.
+Bei den fünf Suchfällen wurden **92–95 % weniger Zeichen** ausgegeben als beim vollständigen jeweiligen Gruppenindex. Das misst die Auswahlphase, keine allgemeine Tokenersparnis und keine vollständige Bearbeitung einschließlich Bildern.
 
-### Prüfungen selbst ausführen
+**Prüfstatus bleibt präzise:** Indiziert, als Text gelesen, im Originalbild angesehen und fachlich geprüft sind getrennte Zustände. Ein Hashvergleich oder erzeugtes Bild bestätigt keine mathematische Richtigkeit.
 
-```sh
-python -m pip install reportlab
-python scripts/selbsttest.py
-python scripts/plattformtest.py
-python Obsidian-Plan/Pruefung/vault_pruefen.py
-```
+## Was du wissen solltest
 
-Die Tests erzeugen eigene kleine PDF-Dateien in einem temporären Verzeichnis; fremde Lehrunterlagen werden dafür nicht benötigt.
+Das Python-Werkzeug verarbeitet lokal. Welche Inhalte ein KI-Agent an seinen Anbieter übermittelt, hängt von dessen Umgebung ab. Scans und Bildinhalte sind ohne passenden Text nicht zuverlässig durchsuchbar; OCR ist nicht integriert. Erkannte Lösungsbereiche werden standardmäßig ausgeblendet, unmarkierte Antworten und ganze Seitenbilder benötigen weiterhin sorgfältige Prüfung. Die vollständige Abnahme aller Agent-Oberflächen und eine umfassende fachliche Prüfung sind offen.
 
-## Aufbau und Weiterentwicklung
+## Weiterführend
 
 | Einstieg | Inhalt |
 | --- | --- |
-| [SKILL.md](SKILL.md) | Verbindlicher Ablauf, Quellenangaben und Umgang mit Unsicherheit |
-| [scripts/](scripts/) | CLI, Abhängigkeiten und Selbsttest |
-| [Projektbeispiel](references/beispiel-formelsammlung.md) | Zuordnung von Quellen und Sichtungsordnern |
-| [Plan und Nachweise](Obsidian-Plan/00%20Start.md) | Entscheidungen, Messungen und offene Schritte; auch direkt auf GitHub lesbar |
-| [Repository-Konfiguration](docs/repository-konfiguration.md) | Schutzregeln, CI-Berechtigungen und Release-Prüfweg |
-| [CHANGELOG.md](CHANGELOG.md) | Änderungen je Version |
+| [Installation und Updates](docs/installation.md) | Passender Weg für Projekt, ZIP, globale Verknüpfungen und Cloud |
+| [Nutzungsbeispiele](references/gezielte-nutzung.md) | Suche, Seitenlesen, Bilder und Arbeitsfassungen |
+| [Skill-Anweisung](SKILL.md) | Verbindlicher Ablauf für Agenten |
+| [Änderungen](CHANGELOG.md) · [Release-Hinweise](docs/releases/v1.5.0.md) | Neuerungen und Versionsgrenzen |
+| [Plan und Nachweise](Obsidian-Plan/00%20Start.md) | Entscheidungen, frühere Messungen und offene Schritte |
+| [Mitwirken](CONTRIBUTING.md) | Fehler melden und Änderungen nachvollziehbar prüfen |
 
-Version 1.5.0 ergänzt gezielte Suche, Seitenzugriff und wiederverwendbare Arbeitsfassungen. Für eine festgelegte Installation `v1.5.0` auschecken. Die [Release-Action](.github/workflows/release.yml) prüft Selbsttest, Vault, Repository-Prüfsummen und Tag-Version, baut ein Skill-ZIP und legt einen Release-Entwurf an. Nach Download und Vergleich mit dem getaggten Quellstand wird dieser veröffentlicht.
-
-Im Release liegen das Skill-ZIP und eine separate `SHA256SUMS` für dessen Download. Die gleichnamige Datei im Repository prüft dagegen die darin aufgeführten Quelldateien. Der ZIP-Inhalt ist für die Skill-Installation gedacht; Dokumentation und Installationsskripte stehen im vollständigen Repository. Eine ZIP-Datei bestätigt noch keine Kompatibilität mit jeder Agent-Oberfläche.
-
-Fehler oder Verbesserungen? Eröffne ein [Issue](https://github.com/Sae-l/pdf-seitenweise-sichten/issues) mit Befehl, Betriebssystem, Python-Version und beobachtetem Ergebnis. Für PDF-Probleme möglichst eine kleine, selbst erstellte Beispieldatei verwenden. Änderungen am Verhalten bitte mit einem passenden Selbsttest und Changelog-Eintrag einreichen.
-
-## Lizenz und Herkunft
-
-[MIT](LICENSE) für den eigenen Code und die Dokumentation dieses Repositorys. Die Lizenz erteilt keine Rechte an fremden PDF-Unterlagen, deren Texten oder Abbildungen. Originalunterlagen und ihre Extraktionen verbleiben im jeweiligen Quellprojekt.
-
-Entstanden am 12.10.2026 aus dem Formelsammlungsprojekt von [Sae-l](https://github.com/Sae-l). Der Schwerpunkt liegt auf belegbarer Quellensichtung; PDF-Erstellung und automatische fachliche Freigabe gehören nicht zum Umfang.
+[MIT-Lizenz](LICENSE) für eigenen Code und Dokumentation. Rechte an fremden PDF-Unterlagen bleiben bei deren Rechteinhabern. Entwickelt von [Sae-l](https://github.com/Sae-l), entstanden im Formelsammlungsprojekt.

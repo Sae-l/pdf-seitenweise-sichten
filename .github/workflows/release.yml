@@ -9,6 +9,10 @@ on:
         description: 'Neue Version aus main veröffentlichen, z. B. v1.5.0'
         required: true
         type: string
+      publish_existing:
+        description: 'Vorhandenen Entwurf herunterladen, gegen den Tag prüfen und veröffentlichen'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -26,6 +30,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ inputs.publish_existing && inputs.tag || github.sha }}
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.12'
@@ -39,12 +45,13 @@ jobs:
           python -c 'import json, os, re; tag = os.environ["RELEASE_TAG"]; assert re.fullmatch(r"v\d+\.\d+\.\d+", tag); assert "v" + json.load(open("ARCHIVE.json"))["version"] == tag'
           test -f "docs/releases/${RELEASE_TAG}.md"
       - name: Neuen Tag nach manueller Prüfung setzen
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' && !inputs.publish_existing
         run: |
           test "$GITHUB_REF" = refs/heads/main
           git tag "$RELEASE_TAG" "$GITHUB_SHA"
           git push origin "refs/tags/$RELEASE_TAG"
       - name: Skill-ZIP und Prüfsumme bauen
+        if: ${{ !inputs.publish_existing }}
         run: |
           mkdir -p dist
           git archive --format=zip --prefix=pdf-seitenweise-sichten/ \
@@ -52,9 +59,34 @@ jobs:
             "$GITHUB_SHA" SKILL.md LICENSE scripts references ARCHIVE.json
           cd dist && sha256sum *.zip > SHA256SUMS
       - name: Release-Entwurf anlegen
+        if: ${{ !inputs.publish_existing }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "$RELEASE_TAG" dist/*.zip dist/SHA256SUMS \
             --verify-tag --draft --title "$RELEASE_TAG · PDF-Unterlagen gezielt sichten" \
             --notes-file "docs/releases/${RELEASE_TAG}.md"
+      - name: Vorhandenen Download unabhängig prüfen und veröffentlichen
+        if: github.event_name == 'workflow_dispatch' && inputs.publish_existing
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$GITHUB_REF" = refs/heads/main
+          gh release view "$RELEASE_TAG" --json isDraft --jq '.isDraft' | grep -qx true
+          gh release download "$RELEASE_TAG" --dir downloaded --pattern '*.zip' --pattern SHA256SUMS
+          (cd downloaded && sha256sum -c SHA256SUMS)
+          python - <<'PY'
+          import os, subprocess, zipfile
+          from pathlib import Path
+          tag = os.environ['RELEASE_TAG']
+          paths = subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', tag, '--', 'SKILL.md', 'LICENSE', 'scripts', 'references', 'ARCHIVE.json'], text=True).splitlines()
+          prefix = 'pdf-seitenweise-sichten/'
+          with zipfile.ZipFile(Path('downloaded') / f'pdf-seitenweise-sichten-{tag}.zip') as archive:
+              files = [entry.filename for entry in archive.infolist() if not entry.is_dir()]
+              assert len(files) == len(set(files)), 'Doppelte ZIP-Einträge'
+              assert set(files) == {prefix + path for path in paths}, 'ZIP-Dateiliste weicht vom Tag ab'
+              for path in paths:
+                  assert archive.read(prefix + path) == subprocess.check_output(['git', 'show', f'{tag}:{path}']), path
+          print(f'DOWNLOAD_VERIFIED: {tag}, {len(paths)} Dateien bytegleich zum Tag')
+          PY
+          gh release edit "$RELEASE_TAG" --draft=false --latest
