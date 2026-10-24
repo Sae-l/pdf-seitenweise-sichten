@@ -132,8 +132,8 @@ In Codex den Skill über `$pdf-seitenweise-sichten` wählen. Claude Code, Antigr
 | Plattformbereitstellung | [Plattformtest](scripts/plattformtest.py): portable Pakete, Ausführung aus anderem Arbeitsordner, native Installer, Wiederholung und Konfliktschutz. In der CI dürfen diese Tests nicht übersprungen werden. Das ersetzt keine Endabnahme in den fünf Agent-Oberflächen. |
 | Skill-Format | Formale Validierung des aktuellen Arbeitsstands bestanden; Details in [ARCHIVE.json](ARCHIVE.json). |
 | Dokumentation | [Vault-Prüfung](Obsidian-Plan/Pruefung/vault_pruefen.py) prüft Verknüpfungen, Erreichbarkeit und Manifest. [SHA256SUMS](SHA256SUMS) dokumentiert die aufgeführten Repository-Dateien. |
-| Reale Unterlagen | v1.3.0 wurde an CuD-Unterlagen und zwei weiteren PDF-Sätzen erprobt. Messgrundlage und Grenzen stehen in [Ist-Stand und Messung](Obsidian-Plan/20%20Ist-Stand%20und%20Messung.md). Diese Ergebnisse gelten nicht automatisch für spätere Änderungen. |
-| Offene Nachweise | Synthetische Lesetests in Codex und Claude Code sind dokumentiert. Vollständige Endabnahmen aller fünf Agenten und erneute reale PDF-Messungen bleiben offen; siehe [Abnahmebericht](docs/plattformabnahme-v1.4.0.md). |
+| Reale Unterlagen | v1.5.0: 27 MPG1-PDFs/218 Seiten, fünf feste Suchfälle und zwei Bildstichproben; [Messung und Grenzen](docs/umsetzung-pdf-werkzeug-2026-10-24.md). Der frühere [CuD-Vergleich](Obsidian-Plan/20%20Ist-Stand%20und%20Messung.md) gilt weiterhin nur für v1.3.0. |
+| Offene Nachweise | Vollständige Endabnahmen aller fünf Agenten, umfassende fachliche Prüfung und tatsächliche Modelltokenmessungen bleiben offen. Historische Agent-Lesetests: [Abnahmebericht v1.4.0](docs/plattformabnahme-v1.4.0.md). |
 
 Die Zustände **indiziert**, **als Text gelesen**, **im Originalbild angesehen** und **fachlich geprüft** bleiben getrennt. Erzeugte Bilder gelten nicht automatisch als angesehen. Auch eine Bildsichtung beweist keine mathematische Richtigkeit.
 
