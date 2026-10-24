@@ -3,6 +3,12 @@ name: Release
 on:
   push:
     tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Neue Version aus main veröffentlichen, z. B. v1.5.0'
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -14,6 +20,8 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
     permissions:
       contents: write
     steps:
@@ -28,19 +36,25 @@ jobs:
           python scripts/plattformtest.py
           python Obsidian-Plan/Pruefung/vault_pruefen.py
           sha256sum -c SHA256SUMS
-          test -f "docs/releases/${GITHUB_REF_NAME}.md"
-          python -c 'import json, os; assert "v" + json.load(open("ARCHIVE.json"))["version"] == os.environ["GITHUB_REF_NAME"]'
+          python -c 'import json, os, re; tag = os.environ["RELEASE_TAG"]; assert re.fullmatch(r"v\d+\.\d+\.\d+", tag); assert "v" + json.load(open("ARCHIVE.json"))["version"] == tag'
+          test -f "docs/releases/${RELEASE_TAG}.md"
+      - name: Neuen Tag nach manueller Prüfung setzen
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          test "$GITHUB_REF" = refs/heads/main
+          git tag "$RELEASE_TAG" "$GITHUB_SHA"
+          git push origin "refs/tags/$RELEASE_TAG"
       - name: Skill-ZIP und Prüfsumme bauen
         run: |
           mkdir -p dist
           git archive --format=zip --prefix=pdf-seitenweise-sichten/ \
-            --output="dist/pdf-seitenweise-sichten-${GITHUB_REF_NAME}.zip" \
+            --output="dist/pdf-seitenweise-sichten-${RELEASE_TAG}.zip" \
             "$GITHUB_SHA" SKILL.md LICENSE scripts references ARCHIVE.json
           cd dist && sha256sum *.zip > SHA256SUMS
       - name: Release-Entwurf anlegen
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" dist/*.zip dist/SHA256SUMS \
-            --verify-tag --draft --title "$GITHUB_REF_NAME · PDF-Unterlagen gezielt sichten" \
-            --notes-file "docs/releases/${GITHUB_REF_NAME}.md"
+          gh release create "$RELEASE_TAG" dist/*.zip dist/SHA256SUMS \
+            --verify-tag --draft --title "$RELEASE_TAG · PDF-Unterlagen gezielt sichten" \
+            --notes-file "docs/releases/${RELEASE_TAG}.md"

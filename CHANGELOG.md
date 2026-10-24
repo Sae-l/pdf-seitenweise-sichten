@@ -1,5 +1,16 @@
 # Änderungen
 
+## 1.5.0 — 2026-10-24
+
+- `check` prüft zusätzlich Manifest-Seitenfolge, tatsächliche PDF-Seitenzahl, Index-Dokumente und -Links, Bildreferenzen, interne Pfade und Lösungsbeginn. Fehlerhafte Manifeste erhalten verständliche Fehlermeldungen.
+- Neue Extraktionen binden den Rohtext per SHA-256. Altbestände ohne Rohtexthash bleiben lesbar und erhalten einen ausdrücklichen Hinweis. Arbeitsfassungen werden getrennt gespeichert; Originale und bestehende Ausgaben bleiben erhalten.
+- `search` liefert begrenzte, gewichtete Worttreffer; `read` liest ausgewählte Seiten mit Quellenstatus und sichtbarer Fortsetzung. Beide prüfen vorhandene Sichtungen und verbergen erkannte Lösungsbereiche standardmäßig.
+- `save` bewahrt Markdown, Text, CSV, LaTeX und Bilddateien mit Quellen- und Inhaltshashes sowie deklariertem Prüfstatus. `read --arbeitsfassung` prüft diese Bindung vor der Wiederverwendung; keine automatische Fachfreigabe oder Sichtungsmarkierung.
+- Erstseitenkopfzeilen werden dokumentübergreifend im oberen Seitenband ermittelt. Erkannte Lösungstexte erscheinen nicht mehr in Indexvorschauen.
+- Rendering verwendet passende vorhandene Bilder erneut, dokumentiert Quelle/Parameter/Bildhash und schützt abweichende vorhandene Bilder.
+- Synthetische Regressionstests für Prüflücken, Lösungsschutz, begrenzte Suche, Seitenfortsetzungen, Arbeitsfassungen, Rendering und textlose Raster-/Vektorseiten ergänzt; portable Aufrufe erweitert. Gesperrte lokale Junction-Tests werden als übersprungen ausgewiesen; CI lehnt weiterhin jeden übersprungenen Plattformtest ab.
+- MPG1 lokal frisch extrahiert (27 PDFs/218 Seiten), vier Suchaufträge und zwei Bildstichproben geprüft. Zeichenmessungen sind keine Modelltokenmessung; Details und Plattformgrenzen stehen im Umsetzungsnachweis.
+
 ## 1.4.0 — 2026-10-23
 
 - Zwei Audit-Fehler mit Regressionstests korrigiert: Übernommene Bilder erhalten PDF-/Seiten-spezifische Zielnamen und überschreiben keine Bilder anderer Dokumente mit gleichem alten Basisnamen. Die Bildbytes und Prüfmarken bleiben erhalten.
