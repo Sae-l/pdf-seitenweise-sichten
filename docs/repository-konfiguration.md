@@ -22,3 +22,7 @@ ECC kommentiert die PR-Prüfungen, meldet jedoch fehlende Berechtigung zum Verö
 ## Release-Verifikation
 
 Vor einem Tag müssen die Prüfungen für den exakten Release-Commit grün sein. Nach dem Release-Job ZIP und `SHA256SUMS` erneut von GitHub herunterladen, den ZIP-Hash prüfen und jede enthaltene Datei byteweise mit dem Tag vergleichen. Erst dann den Entwurf veröffentlichen und den öffentlichen Release samt Assets zurücklesen. Vorhandene Versions-Tags nicht verschieben.
+
+## Manueller Release-Start ab v1.5.0
+
+Die vorhandene Release-Action unterstützt zusätzlich `workflow_dispatch` mit einer Versionsangabe wie `v1.5.0`. Nach erfolgreicher Pflicht-CI wird sie auf `main` gestartet. Sie prüft Version, Selbsttest, Plattformtest, Vault und Dateihashes, setzt danach einen neuen Tag auf den exakten Workflow-Commit und erzeugt ZIP, SHA-256-Datei und Entwurf. Vorhandene Tags werden nicht überschrieben. Die Schreibrechte bleiben auf den bestehenden Release-Job begrenzt. Anschließend weiterhin Download und byteweisen Tagvergleich durchführen, bevor der Entwurf veröffentlicht wird.

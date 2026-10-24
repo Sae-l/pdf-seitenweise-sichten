@@ -21,7 +21,7 @@ class Installationstest(unittest.TestCase):
 
     def run_python(self, script, *args):
         return subprocess.run([sys.executable, str(script), *map(str, args)], cwd=self.work,
-                              capture_output=True, text=True, errors="replace")
+                              capture_output=True, text=True, encoding="utf-8", errors="replace")
 
     def global_install(self, home):
         command = (["powershell", "-NoProfile", "-NonInteractive", "-File", str(ROOT / "install.ps1"),
@@ -51,7 +51,14 @@ class Installationstest(unittest.TestCase):
                 script = installed / "scripts/sichtung.py"
                 output = self.work / (folder + "_sichtung")
                 for args in (("--help",), ("extract", source, output), ("check", output),
-                             ("render", pdf, 1, self.work / (folder + "_bilder"))):
+                             ("render", pdf, 1, self.work / (folder + "_bilder")),
+                             ("search", output, "Kraft"), ("read", output, "Mechanik.pdf", 1)):
+                    result = self.run_python(script, *args)
+                    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                note = self.work / "Arbeitsfassung.md"
+                note.write_text("Kraft und Beschleunigung, Quellenbezug wird beim Speichern ergänzt.", encoding="utf-8")
+                for args in (("save", output, "Mechanik.pdf", 1, note),
+                             ("read", output, "Mechanik.pdf", 1, "--arbeitsfassung")):
                     result = self.run_python(script, *args)
                     self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
                 self.assertTrue((output / "Seitenindex.md").is_file())
@@ -80,6 +87,9 @@ class Installationstest(unittest.TestCase):
         if os.name == "nt":
             result = subprocess.run(["cmd", "/c", "mklink", "/J", str(link), str(outside)],
                                     capture_output=True, text=True, errors="replace")
+            if result.returncode and any(message in result.stdout + result.stderr
+                                         for message in ("Zugriff verweigert", "Access is denied")):
+                self.skipTest("Sandbox sperrt Junction-Erzeugung; Pfadschutz hier nicht ausführbar")
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         else:
             link.symlink_to(outside, target_is_directory=True)

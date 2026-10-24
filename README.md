@@ -8,9 +8,11 @@ Ein Agent-Skill mit lokalem Python-Werkzeug für Vorlesungsfolien, Übungsblätt
 
 [Schnellstart](#schnellstart) · [Als Skill nutzen](#als-skill-nutzen) · [Prüfstand](#prüfstand) · [Änderungen](CHANGELOG.md) · [MIT-Lizenz](LICENSE)
 
-**Version 1.4.0:** [Release und Skill-ZIP](https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.4.0) · [Release-Hinweise](docs/releases/v1.4.0.md)
+**Version 1.5.0:** [Release und Skill-ZIP](https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.5.0) · [Release-Hinweise](docs/releases/v1.5.0.md)
 
-Das Release enthält die portable Projektinstallation und die beiden Korrekturen aus dem Repository-Audit. Den Umfang der Plattformprüfung dokumentiert der [Abnahmebericht](docs/plattformabnahme-v1.4.0.md).
+**Neu in 1.5.0:** begrenzte Suche, seitenweises Lesen, getrennte Arbeitsfassungen und erweiterte Integritätsprüfung. Bestehende Installationen werden nicht automatisch aktualisiert. Anleitung: [Gezielte Nutzung](references/gezielte-nutzung.md), Messungen und Grenzen: [Umsetzungsnachweis](docs/umsetzung-pdf-werkzeug-2026-10-24.md).
+
+Das Release baut auf der portablen Projektinstallation auf und ergänzt die gezielte PDF-Nutzung. Die [Umsetzungsnachweise](docs/umsetzung-pdf-werkzeug-2026-10-24.md) trennen lokale Prüfungen, Bildstichproben und offene Agent-Endabnahmen; der [Abnahmebericht zu v1.4.0](docs/plattformabnahme-v1.4.0.md) bleibt ein historischer Nachweis.
 
 ## Was du bekommst
 
@@ -60,6 +62,21 @@ Unterlagen_Sichtung/
 ```
 
 Byte-identische PDFs werden nur einmal indiziert. `check` beendet sich mit einem Fehlerstatus, wenn PDFs neu, geändert oder entfernt sind, der Seitenindex, Prüfsummen oder Markdown-Dateien fehlen oder Seitenabschnitte nicht stimmen.
+
+### Gezielt suchen, lesen und wiederverwenden
+
+```sh
+python scripts/sichtung.py search "../Unterlagen_Sichtung" "Kraft Beschleunigung"
+python scripts/sichtung.py read "../Unterlagen_Sichtung" "Mechanik.pdf" 7
+python scripts/sichtung.py save "../Unterlagen_Sichtung" "Mechanik.pdf" 7 "Kraft.md" --status original-geprüft
+python scripts/sichtung.py read "../Unterlagen_Sichtung" "Mechanik.pdf" 7 --arbeitsfassung
+```
+
+Die Arbeitsdatei `Kraft.md` vorher anhand der Quelle erstellen; das Werkzeug erzeugt oder bestätigt ihren Inhalt nicht selbst. Auch Text, CSV, LaTeX, PNG und JPEG sind möglich. `save` speichert die Datei mit Quellen- und Inhaltshashes und schützt vorhandene Arbeitsfassungen. Es setzt keine Sichtungsmarken automatisch.
+
+`search` gibt standardmäßig höchstens fünf kurze Treffer aus. `read` liefert eine Seite, bei mehr als 12 000 Zeichen mit ausdrücklicher Fortsetzungsposition. Beide prüfen den Bestand vorher. Lösungsbereiche bleiben standardmäßig ausgeblendet; `--mit-antworten` bezieht sie ausdrücklich ein. Die Erkennung ist heuristisch und ersetzt keinen sorgfältigen Umgang mit ungekennzeichneten Lösungen oder ganzen Seitenbildern. Scans und Bildinhalte sind ohne passenden Text nicht zuverlässig durchsuchbar.
+
+Der erweiterte `check` prüft auch Manifest-/Index-Seitenlisten, tatsächliche PDF-Seitenzahlen, Bildpfade und Markdown-Linkziele. Neue Extraktionen schützen zusätzlich ihren Rohtext per SHA-256; ältere Bestände erhalten einen Hinweis auf den fehlenden Rohtextnachweis. Korrekturen gehören in die getrennte Arbeitsfassung. `render` verwendet unveränderte Bilder anhand eines JSON-Nachweises erneut und überschreibt abweichende bestehende Bilder nicht; dann einen neuen Bildordner wählen.
 
 ### Wenn sich die Unterlagen ändern
 
@@ -115,8 +132,8 @@ In Codex den Skill über `$pdf-seitenweise-sichten` wählen. Claude Code, Antigr
 | Plattformbereitstellung | [Plattformtest](scripts/plattformtest.py): portable Pakete, Ausführung aus anderem Arbeitsordner, native Installer, Wiederholung und Konfliktschutz. In der CI dürfen diese Tests nicht übersprungen werden. Das ersetzt keine Endabnahme in den fünf Agent-Oberflächen. |
 | Skill-Format | Formale Validierung des aktuellen Arbeitsstands bestanden; Details in [ARCHIVE.json](ARCHIVE.json). |
 | Dokumentation | [Vault-Prüfung](Obsidian-Plan/Pruefung/vault_pruefen.py) prüft Verknüpfungen, Erreichbarkeit und Manifest. [SHA256SUMS](SHA256SUMS) dokumentiert die aufgeführten Repository-Dateien. |
-| Reale Unterlagen | v1.3.0 wurde an CuD-Unterlagen und zwei weiteren PDF-Sätzen erprobt. Messgrundlage und Grenzen stehen in [Ist-Stand und Messung](Obsidian-Plan/20%20Ist-Stand%20und%20Messung.md). Diese Ergebnisse gelten nicht automatisch für spätere Änderungen. |
-| Offene Nachweise | Synthetische Lesetests in Codex und Claude Code sind dokumentiert. Vollständige Endabnahmen aller fünf Agenten und erneute reale PDF-Messungen bleiben offen; siehe [Abnahmebericht](docs/plattformabnahme-v1.4.0.md). |
+| Reale Unterlagen | v1.5.0: 27 MPG1-PDFs/218 Seiten, fünf feste Suchfälle und zwei Bildstichproben; [Messung und Grenzen](docs/umsetzung-pdf-werkzeug-2026-10-24.md). Der frühere [CuD-Vergleich](Obsidian-Plan/20%20Ist-Stand%20und%20Messung.md) gilt weiterhin nur für v1.3.0. |
+| Offene Nachweise | Vollständige Endabnahmen aller fünf Agenten, umfassende fachliche Prüfung und tatsächliche Modelltokenmessungen bleiben offen. Historische Agent-Lesetests: [Abnahmebericht v1.4.0](docs/plattformabnahme-v1.4.0.md). |
 
 Die Zustände **indiziert**, **als Text gelesen**, **im Originalbild angesehen** und **fachlich geprüft** bleiben getrennt. Erzeugte Bilder gelten nicht automatisch als angesehen. Auch eine Bildsichtung beweist keine mathematische Richtigkeit.
 
@@ -142,7 +159,7 @@ Die Tests erzeugen eigene kleine PDF-Dateien in einem temporären Verzeichnis; f
 | [Repository-Konfiguration](docs/repository-konfiguration.md) | Schutzregeln, CI-Berechtigungen und Release-Prüfweg |
 | [CHANGELOG.md](CHANGELOG.md) | Änderungen je Version |
 
-Version 1.4.0 ergänzt die portable Plattformbereitstellung, eindeutige Namen übernommener Bilder und die Prüfung auf einen fehlenden Seitenindex. Für eine festgelegte Installation `v1.4.0` auschecken. Die [Release-Action](.github/workflows/release.yml) prüft Selbsttest, Vault, Repository-Prüfsummen und Tag-Version, baut ein Skill-ZIP und legt einen Release-Entwurf an. Nach Download und Vergleich mit dem getaggten Quellstand wird dieser veröffentlicht.
+Version 1.5.0 ergänzt gezielte Suche, Seitenzugriff und wiederverwendbare Arbeitsfassungen. Für eine festgelegte Installation `v1.5.0` auschecken. Die [Release-Action](.github/workflows/release.yml) prüft Selbsttest, Vault, Repository-Prüfsummen und Tag-Version, baut ein Skill-ZIP und legt einen Release-Entwurf an. Nach Download und Vergleich mit dem getaggten Quellstand wird dieser veröffentlicht.
 
 Im Release liegen das Skill-ZIP und eine separate `SHA256SUMS` für dessen Download. Die gleichnamige Datei im Repository prüft dagegen die darin aufgeführten Quelldateien. Der ZIP-Inhalt ist für die Skill-Installation gedacht; Dokumentation und Installationsskripte stehen im vollständigen Repository. Eine ZIP-Datei bestätigt noch keine Kompatibilität mit jeder Agent-Oberfläche.
 

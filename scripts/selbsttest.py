@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Selbsttest für sichtung.py: python scripts/selbsttest.py (benötigt zusätzlich reportlab)."""
-import json, shutil, subprocess, sys, tempfile
+import hashlib, json, shutil, subprocess, sys, tempfile
 from pathlib import Path
 
 from reportlab.pdfgen import canvas
@@ -10,7 +10,7 @@ SKRIPT = Path(__file__).with_name("sichtung.py")
 
 
 def lauf(*args):
-    return subprocess.run([sys.executable, str(SKRIPT), *map(str, args)], capture_output=True, text=True)
+    return subprocess.run([sys.executable, str(SKRIPT), *map(str, args)], capture_output=True, text=True, encoding="utf-8")
 
 
 with tempfile.TemporaryDirectory() as tmp:
@@ -53,6 +53,84 @@ with tempfile.TemporaryDirectory() as tmp:
 
     assert lauf("extract", quelle, tmp / "out").returncode != 0, "bestehender Index wurde nicht geschützt"
     assert lauf("check", tmp / "out").returncode == 0
+
+    # Jede Mutation wird einzeln zurückgesetzt: ein früherer Fehler darf keinen späteren verdecken.
+    mf = tmp / "out" / "manifest.json"
+    manifest_bytes = mf.read_bytes()
+    canonical = next(d for d in manifest if "page_index" in d)
+    bild = tmp / "out" / seiten[3]["image"]
+    bild_bytes = bild.read_bytes()
+    bild.unlink()
+    assert lauf("check", tmp / "out").returncode != 0, "fehlendes Bild übersehen"
+    bild.write_bytes(bild_bytes)
+    for invalid in ("{", "{}", "[]"):
+        mf.write_text(invalid, encoding="utf-8")
+        r = lauf("check", tmp / "out")
+        assert r.returncode != 0 and "Traceback" not in r.stderr
+    mf.write_bytes(manifest_bytes)
+    for change in (lambda d: d[0]["page_index"][0].update(page=2),
+                   lambda d: d[0]["page_index"][0].update(image="../fremd.png"),
+                   lambda d: d[0].update(markdown="../fremd.md")):
+        bad = json.loads(manifest_bytes)
+        change(bad)
+        mf.write_text(json.dumps(bad), encoding="utf-8")
+        assert lauf("check", tmp / "out").returncode != 0
+    mf.write_bytes(manifest_bytes)
+    for broken in ("# Leer\n", index.replace("- S. 2:", "- S. 1:"), index.replace("[Markdown](md/", "[Markdown](falsch/")):
+        (tmp / "out" / "Seitenindex.md").write_text(broken, encoding="utf-8")
+        assert lauf("check", tmp / "out").returncode != 0
+    (tmp / "out" / "Seitenindex.md").write_text(index, encoding="utf-8")
+    rawpath = tmp / "out" / canonical["markdown"]
+    rawbytes = rawpath.read_bytes()
+    rawpath.write_bytes(rawbytes + b"\nFalscher Zusatz\n")
+    assert lauf("check", tmp / "out").returncode != 0, "veränderten Rohtext übersehen"
+    rawpath.write_bytes(rawbytes)
+    assert lauf("check", tmp / "out").returncode == 0
+    # Alle Metadaten können zueinander passen und trotzdem der Originalseitenzahl widersprechen.
+    shortened = rawbytes.decode("utf-8").split("## PDF-Seite 4")[0]
+    rawpath.write_text(shortened, encoding="utf-8")
+    bad = json.loads(manifest_bytes)
+    bad[0].update(pages=3, page_index=bad[0]["page_index"][:3], markdown_sha256=hashlib.sha256(rawpath.read_bytes()).hexdigest())
+    mf.write_text(json.dumps(bad), encoding="utf-8")
+    (tmp / "out" / "Seitenindex.md").write_text("\n".join(z for z in index.replace("(4 PDF-Seiten)", "(3 PDF-Seiten)").splitlines() if not z.startswith("- S. 4:")), encoding="utf-8")
+    r = lauf("check", tmp / "out")
+    assert r.returncode != 0 and "PDF-Seitenzahl" in r.stdout
+    rawpath.write_bytes(rawbytes)
+    mf.write_bytes(manifest_bytes)
+    (tmp / "out" / "Seitenindex.md").write_text(index, encoding="utf-8")
+
+    # Begrenzte Suche, seitenweises Lesen und ausdrückliches Einbeziehen von Lösungen.
+    r = lauf("search", tmp / "out", "Kinematik")
+    assert r.returncode == 0, r.stderr
+    found = json.loads(r.stdout)
+    assert found["gesamt"] == 1 and found["treffer"][0]["pdf_seite"] == 1
+    numbered = json.loads(lauf("search", tmp / "out", "Aufgabe 1").stdout)
+    assert numbered["gesamt"] == 1 and numbered["treffer"][0]["pdf_seite"] == 2
+    assert json.loads(lauf("search", tmp / "out", "12 N").stdout)["gesamt"] == 0
+    assert json.loads(lauf("search", tmp / "out", "12 N", "--mit-antworten").stdout)["gesamt"] == 1
+    assert lauf("search", tmp / "out", "", "--limit", 0).returncode != 0
+    page = json.loads(lauf("read", tmp / "out", canonical["pdf"], 3).stdout)
+    assert "12 N" not in page["text"] and page["antworten_ausgeblendet"] and page["bild"] is None
+    page = json.loads(lauf("read", tmp / "out", canonical["pdf"], 1).stdout)
+    first = json.loads(lauf("read", tmp / "out", canonical["pdf"], 1, "--zeichen", 20).stdout)
+    rest = json.loads(lauf("read", tmp / "out", canonical["pdf"], 1, "--offset", 20).stdout)
+    assert first["naechster_offset"] == 20 and first["text"] + rest["text"] == page["text"]
+    assert lauf("read", tmp / "out", canonical["pdf"], 99).returncode != 0
+    assert lauf("read", tmp / "out", canonical["pdf"], 1, "--offset", 99999).returncode != 0
+
+    note = tmp / "geprueft.md"
+    note.write_text("# Kinematik\nArbeitsfassung mit Quellenbezug.\n", encoding="utf-8")
+    r = lauf("save", tmp / "out", canonical["pdf"], 1, note, "--status", "original-geprüft")
+    assert r.returncode == 0, r.stderr
+    asset = Path(json.loads(r.stdout)["datei"])
+    assert lauf("save", tmp / "out", canonical["pdf"], 1, note).returncode != 0
+    reused = json.loads(lauf("read", tmp / "out", canonical["pdf"], 1, "--arbeitsfassung").stdout)
+    assert reused["text"] == note.read_text(encoding="utf-8")
+    assert reused["arbeitsfassung"]["status"] == "original-geprüft"
+    assert json.loads(mf.read_text(encoding="utf-8")) == manifest, "Speichern erfindet keine Sichtungsmarken"
+    asset.write_text("verändert", encoding="utf-8")
+    assert lauf("read", tmp / "out", canonical["pdf"], 1, "--arbeitsfassung").returncode != 0
+    assert lauf("save", tmp / "out", canonical["pdf"], 3, note).returncode != 0
 
     (tmp / "out" / "Seitenindex.md").unlink()
     r = lauf("check", tmp / "out")
@@ -114,6 +192,14 @@ with tempfile.TemporaryDirectory() as tmp:
     r = lauf("render", pdf, 2, tmp / "bilder")
     assert r.returncode == 0 and (tmp / "bilder" / "Test-S002.png").exists(), r.stderr
     assert lauf("render", pdf, 9, tmp / "bilder").returncode != 0
+    bild = tmp / "bilder" / "Test-S002.png"
+    vorher = bild.stat().st_mtime_ns
+    assert lauf("render", pdf, 2, tmp / "bilder").returncode == 0
+    assert bild.stat().st_mtime_ns == vorher, "unverändertes Bild unnötig neu gerendert"
+    assert lauf("render", pdf, 2, tmp / "bilder", "--scale", 3).returncode != 0
+    assert bild.stat().st_mtime_ns == vorher, "abweichender Renderauftrag überschreibt ein Bild"
+    for scale in ("0", "nan", "inf", "7"):
+        assert lauf("render", pdf, 2, tmp / "bilder", "--scale", scale).returncode != 0
 
     pdf.unlink()
     assert lauf("check", tmp / "neu2").returncode != 0, "entfernte PDF übersehen"
@@ -147,5 +233,67 @@ with tempfile.TemporaryDirectory() as tmp:
         page = doc["page_index"][0]
         assert page["original_image_viewed"] is True
         assert (new / page["image"]).read_bytes() == expected[doc["pdf"]], "übernommenes Bild verändert"
+
+    # Erstseitenköpfe, gemischte Lösungsseiten und Fortsetzungsseiten ohne erneuten Marker.
+    source = tmp / "gemischt"
+    source.mkdir()
+    for name in ("Algebra", "Mechanik"):
+        c = canvas.Canvas(str(source / f"{name}.pdf"))
+        c.drawString(50, 815, "Institut fuer Testunterlagen")
+        c.drawString(50, 790, "Lehre und Forschung")
+        c.drawString(50, 750, f"Aufgabe {name}: Thema {name}")
+        c.drawString(50, 720, "Endantworten: Geheimwert 98765")
+        c.showPage()
+        c.drawString(50, 750, "Fortsetzung der Ergebnisse: Geheimwert 54321")
+        c.save()
+    out = tmp / "gemischte_sichtung"
+    r = lauf("extract", source, out)
+    assert r.returncode == 0, r.stderr
+    idx = (out / "Seitenindex.md").read_text(encoding="utf-8")
+    assert "Institut fuer" not in idx and "Lehre und Forschung" not in idx
+    assert "Aufgabe Algebra" in idx and "98765" not in idx and "54321" not in idx
+    for keyword in ("98765", "54321"):
+        assert json.loads(lauf("search", out, keyword).stdout)["gesamt"] == 0
+    mixed = json.loads(lauf("read", out, "Algebra.pdf", 1).stdout)
+    assert "Aufgabe Algebra" in mixed["text"] and "98765" not in mixed["text"] and mixed["bild"] is None
+    hits = json.loads(lauf("search", out, "Aufgabe", "--limit", 1).stdout)
+    assert hits["gesamt"] == 2 and len(hits["treffer"]) == 1 and hits["naechster_offset"] == 1
+    more = json.loads(lauf("search", out, "Aufgabe", "--limit", 1, "--offset", 1).stdout)
+    assert more["treffer"][0]["pdf"] != hits["treffer"][0]["pdf"] and more["naechster_offset"] is None
+    assert lauf("extract", source, source / "ausgabe").returncode != 0
+
+    # Bild-/Vektorseiten ohne Text bleiben als visueller Prüfbedarf sichtbar.
+    scan_source = tmp / "bildseiten"
+    scan_source.mkdir()
+    raster = tmp / "raster.png"
+    Image.new("RGB", (80, 80), "green").save(raster)
+    c = canvas.Canvas(str(scan_source / "Bild.pdf"))
+    c.drawImage(str(raster), 60, 550, width=160, height=160)
+    c.showPage()
+    c.line(50, 500, 400, 500)
+    c.line(50, 500, 50, 750)
+    c.line(50, 500, 350, 700)
+    c.save()
+    scan_out = tmp / "bildsichtung"
+    assert lauf("extract", scan_source, scan_out).returncode == 0
+    result = json.loads(lauf("search", scan_out, "unbekanntes Thema").stdout)
+    assert result["gesamt"] == 0 and result["seiten_mit_bildbedarf"] == 2
+    for number in (1, 2):
+        page = json.loads(lauf("read", scan_out, "Bild.pdf", number).stdout)
+        assert page["bild"] and page["status"]["original_image_viewed"] is False
+        with Image.open(page["bild"]) as image:
+            assert image.width > 100 and image.height > 100
+    r = lauf("save", scan_out, "Bild.pdf", 1, raster)
+    assert r.returncode == 0, r.stderr
+    note = json.loads(lauf("read", scan_out, "Bild.pdf", 1, "--arbeitsfassung").stdout)
+    assert note["text"] == "" and Path(note["arbeitsfassung"]["datei"]).read_bytes() == raster.read_bytes()
+    assert note["arbeitsfassung"]["status"] == "offen"
+    invalid = tmp / "kaputt.png"
+    invalid.write_bytes(b"kein Bild")
+    assert lauf("save", scan_out, "Bild.pdf", 2, invalid).returncode != 0
+    invalid = tmp / "kaputt.txt"
+    invalid.write_bytes(b"\xff\xfe")
+    assert lauf("save", scan_out, "Bild.pdf", 2, invalid).returncode != 0
+    assert not (scan_out / "arbeitsfassung" / "Bild-S002.json").exists()
 
 print("Selbsttest bestanden")
