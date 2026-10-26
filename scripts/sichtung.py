@@ -25,6 +25,12 @@ except ImportError:
 STATUS = dict(text_read=False, original_image_viewed=False, subject_review="offen")
 SEITENZAHL = re.compile(r"^(Seite \d+( von \d+)?|\d+( / \d+)?|©.*)$")
 ANTWORTEN = re.compile(r"(?im)^[ \t]*(?:Endantworten|Lösungen|Loesungen|Musterlösungen|Answers|Solutions)[ \t]*(?::|$)")
+INHALT = re.compile(r"(?im)^[ \t]*(?:Inhaltsverzeichnis|Inhalt|Contents|Table of Contents)[ \t]*:?[ \t]*$")
+
+
+def antwortmarker(raw):
+    """Lösungsbeginn; ein Kapiteleintrag im Inhaltsverzeichnis ist keiner."""
+    return None if INHALT.search(raw) else ANTWORTEN.search(raw)
 
 
 def ausgabepfad(ordner, name):
@@ -82,7 +88,7 @@ def seitenabschnitte(text):
 
 
 def aufgabentext(raw, seite, antwortbeginn):
-    marker = ANTWORTEN.search(raw)
+    marker = antwortmarker(raw)
     if marker:
         return raw[:marker.start()].rstrip(), True
     if antwortbeginn is not None and seite >= antwortbeginn:
@@ -176,7 +182,7 @@ def extract(quelle, ziel, alt_ordner=None, ueberschrift=None):
                   f"[Markdown]({quote('md/' + source.stem + '.md', safe='/')})", ""]
         pages, answer_start_page = [], None
         for number, raw in enumerate(texte, 1):
-            marker = ANTWORTEN.search(raw)
+            marker = antwortmarker(raw)
             if marker and answer_start_page is None:
                 answer_start_page = number
             sicherer_text, _ = aufgabentext(raw, number, answer_start_page)
@@ -251,7 +257,7 @@ def check(ziel, quelle=None):
             sections = seitenabschnitte(text)
             if [n for n, _ in sections] != list(range(1, d["pages"] + 1)):
                 print(f"FEHLER {md.name}: Seitenabschnitte fehlen, sind doppelt oder falsch geordnet"); probleme += 1
-            answer = next((n for n, raw in sections if ANTWORTEN.search(raw)), None)
+            answer = next((n for n, raw in sections if antwortmarker(raw)), None)
             if answer != d.get("answer_start_page"):
                 print(f"FEHLER {md.name}: Endantwortenbeginn stimmt nicht; neu extrahieren"); probleme += 1
             if d.get("markdown_sha256") and sha256(md) != d["markdown_sha256"]:
@@ -360,7 +366,7 @@ def suche(ordner, suchtext, limit=5, offset=0, mit_antworten=False):
     task_pattern = re.compile(r"(?im)^[ \t]*(?:Aufgabe[ \t]+)?" + aufgabe[1] + r"(?:[.):]|[ \t]+)") if aufgabe else None
     if (not woerter and not aufgabe) or not 1 <= limit <= 50 or offset < 0:
         raise ValueError("Suchtext benötigt Wörter; limit 1–50, offset mindestens 0")
-    treffer, bildbedarf = [], 0
+    treffer, bildbedarf, ausgeblendet = [], 0, 0
     for group, docs in gepruefte_gruppen(ordner):
         for doc in docs:
             if "duplicate_of" in doc:
@@ -369,6 +375,7 @@ def suche(ordner, suchtext, limit=5, offset=0, mit_antworten=False):
                 text, verborgen = aufgabentext(raw, number, doc.get("answer_start_page"))
                 if mit_antworten:
                     text = raw
+                ausgeblendet += int(verborgen and not mit_antworten)
                 bildbedarf += int("wenig Text" in doc["page_index"][number - 1]["flags"])
                 if not text:
                     continue
@@ -387,7 +394,7 @@ def suche(ordner, suchtext, limit=5, offset=0, mit_antworten=False):
     treffer.sort(key=lambda item: (-item[0], item[1]["ordner"], item[1]["pdf"], item[1]["pdf_seite"]))
     return dict(gesamt=len(treffer), treffer=[hit for _, hit in treffer[offset:offset + limit]],
                 naechster_offset=offset + limit if offset + limit < len(treffer) else None,
-                seiten_mit_bildbedarf=bildbedarf,
+                seiten_mit_bildbedarf=bildbedarf, seiten_ausgeblendet=ausgeblendet,
                 hinweis="Wortsuche, keine semantische Suche. Scans und Bildinhalte können ohne Text unauffindbar sein. Lösungsmarker sind heuristisch.")
 
 

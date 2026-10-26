@@ -106,8 +106,10 @@ with tempfile.TemporaryDirectory() as tmp:
     assert found["gesamt"] == 1 and found["treffer"][0]["pdf_seite"] == 1
     numbered = json.loads(lauf("search", tmp / "out", "Aufgabe 1").stdout)
     assert numbered["gesamt"] == 1 and numbered["treffer"][0]["pdf_seite"] == 2
-    assert json.loads(lauf("search", tmp / "out", "12 N").stdout)["gesamt"] == 0
-    assert json.loads(lauf("search", tmp / "out", "12 N", "--mit-antworten").stdout)["gesamt"] == 1
+    verborgen = json.loads(lauf("search", tmp / "out", "12 N").stdout)
+    assert verborgen["gesamt"] == 0 and verborgen["seiten_ausgeblendet"] >= 1, "Lösungsschutz verschweigt ausgeblendete Seiten"
+    offen = json.loads(lauf("search", tmp / "out", "12 N", "--mit-antworten").stdout)
+    assert offen["gesamt"] == 1 and offen["seiten_ausgeblendet"] == 0
     assert lauf("search", tmp / "out", "", "--limit", 0).returncode != 0
     page = json.loads(lauf("read", tmp / "out", canonical["pdf"], 3).stdout)
     assert "12 N" not in page["text"] and page["antworten_ausgeblendet"] and page["bild"] is None
@@ -295,5 +297,26 @@ with tempfile.TemporaryDirectory() as tmp:
     invalid.write_bytes(b"\xff\xfe")
     assert lauf("save", scan_out, "Bild.pdf", 2, invalid).returncode != 0
     assert not (scan_out / "arbeitsfassung" / "Bild-S002.json").exists()
+
+    # Ein Lösungskapitel im Inhaltsverzeichnis darf den Rest des Skripts nicht ausblenden.
+    toc_source = tmp / "skript"
+    toc_source.mkdir()
+    c = canvas.Canvas(str(toc_source / "Skript.pdf"))
+    for zeilen in (["Inhaltsverzeichnis", "Kapitel 1 Kinematik", "Lösungen", "Anhang"],
+                   ["Kapitel 1 Kinematik", "Geschwindigkeit v = s/t"],
+                   ["Kapitel 2 Energie", "E = 1/2 m v^2"],
+                   ["Lösungen", "v = 3 m/s"]):
+        for i, z in enumerate(zeilen):
+            c.drawString(72, 760 - 20 * i, z)
+        c.showPage()
+    c.save()
+    toc_out = tmp / "skriptsichtung"
+    r = lauf("extract", toc_source, toc_out)
+    assert r.returncode == 0, r.stdout + r.stderr
+    energie = json.loads(lauf("search", toc_out, "Energie").stdout)
+    assert energie["gesamt"] == 1 and energie["treffer"][0]["pdf_seite"] == 3, "Inhaltsverzeichnis sperrt das Skript"
+    assert json.loads(lauf("search", toc_out, "3 m/s").stdout)["gesamt"] == 0, "echtes Lösungskapitel sichtbar"
+    toc_doc = json.loads((toc_out / "manifest.json").read_text(encoding="utf-8"))[0]
+    assert toc_doc["answer_start_page"] == 4
 
 print("Selbsttest bestanden")
