@@ -4,7 +4,7 @@
   "date": "2026-10-24",
   "owner": "Sae-l",
   "source": "Installed Codex skill, created in the Formelsammlung project",
-  "skill_sha256": "1b1cea9ace187af3bcda1a41ca5019246a641727f9d30158963cf69e7c3996e6",
+  "skill_sha256": "973553c4015609e612a41a4a7967f593b27e9978c014a023b0540addb7209b10",
   "checks": {
     "formal_validation": "PASS (root and GitHub entry, quick_validate.py with isolated PyYAML 6.0.3, 2026-10-24)",
     "installed_copy_byte_equality": "NOT_PERFORMED (release does not modify local skill installations)",

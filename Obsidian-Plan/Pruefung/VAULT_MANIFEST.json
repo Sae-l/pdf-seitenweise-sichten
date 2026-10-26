@@ -1,16 +1,21 @@
 {
   "format": 1,
-  "date": "2026-10-24",
+  "date": "2026-10-22",
   "files": [
     {
       "path": "00 Start.md",
-      "bytes": 1877,
-      "sha256": "b7b7dbf43dd4d2c293d641ced929a4070d69598423b81f2954f5eb89a9211a0e"
+      "bytes": 2329,
+      "sha256": "ea0dfce2b08b49cc2676af73019ecf725009e97e87439520f0381faa7f28b65a"
     },
     {
       "path": "10 Ziel und Erfolgskriterien.md",
-      "bytes": 1956,
-      "sha256": "59434405eb533dffcee841685910a437b88bb25939c90b6da0399e93c3bf3f51"
+      "bytes": 5295,
+      "sha256": "4c6bc5b6404e2889bd7b8af2a7672d4a5a93cee860554c23693ddb7e7c5f6f41"
+    },
+    {
+      "path": "15 Glossar.md",
+      "bytes": 2903,
+      "sha256": "abc331b5862880ac9463e52018aeb77c4b0d42b6d1cd3e6b3ebdb306f0006d24"
     },
     {
       "path": "20 Ist-Stand und Messung.md",
@@ -29,8 +34,8 @@
     },
     {
       "path": "40 Entscheidungen.md",
-      "bytes": 2146,
-      "sha256": "7d6b0fbc2396805eec91527e55124944d37e9adc1977dad720fea5675820e949"
+      "bytes": 4278,
+      "sha256": "55ca5c89b277307b1131141985321d1f3aac00e9a5824600301019b303228f17"
     },
     {
       "path": "50 Parkplatz.md",
@@ -41,6 +46,11 @@
       "path": "90 Nachweise/91 Quellen und Prüfwege.md",
       "bytes": 3154,
       "sha256": "c9c9f967fc76ce399b3f89a0c693c644bb5d0fc3e49f4f3aae9350e39cd44971"
+    },
+    {
+      "path": "90 Nachweise/92 Projektbeispiel Formelsammlung.md",
+      "bytes": 1296,
+      "sha256": "7940477bc6d50aa74523e5988426b690c9c58aa6bcf0d10c8e3999a6b40ddc3b"
     },
     {
       "path": "Pruefung/messen.py",

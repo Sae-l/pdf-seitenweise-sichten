@@ -1,5 +1,13 @@
 # Änderungen
 
+## Unveröffentlicht
+
+- Ein Lösungskapitel im Inhaltsverzeichnis (Zeile „Lösungen“ auf einer Seite mit „Inhalt“/„Inhaltsverzeichnis“) setzt keinen Lösungsbeginn mehr. Bisher blendete es den gesamten restlichen Text aus, und die Suche meldete stillschweigend keine Treffer. Bestehende Sichtungen solcher PDFs meldet `check` als „Endantwortenbeginn stimmt nicht; neu extrahieren“; neu in einen eigenen Ordner extrahieren, mit `--alt` bleibt der Prüfstatus erhalten.
+- `search` gibt `seiten_ausgeblendet` aus: die Zahl der wegen Lösungsschutz nicht durchsuchten Seiten. Ein leeres Ergebnis bei Wert über 0 ist kein Nachweis für fehlenden Inhalt.
+- Regressionstests für beide Fälle ergänzt.
+- Projektdefinition im Vault geschärft: projektunabhängiger Zweck, Anforderungen an Extraktion und dreistufigen Index, Erfolgskriterien Z1–Z4, Glossar und nachgetragene Entscheidungen.
+- Projektbeispiel `references/beispiel-formelsammlung.md` aus dem Skill-Paket in den Vault verschoben.
+
 ## 1.5.0 — 2026-10-24
 
 - `check` prüft zusätzlich Manifest-Seitenfolge, tatsächliche PDF-Seitenzahl, Index-Dokumente und -Links, Bildreferenzen, interne Pfade und Lösungsbeginn. Fehlerhafte Manifeste erhalten verständliche Fehlermeldungen.
