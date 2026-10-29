@@ -2,6 +2,10 @@
 
 ## Unveröffentlicht
 
+- Plugin-Paket `plugins/pdf-seitenweise-sichten/` für Claude Code und Codex/ChatGPT sowie Marketplace-Kataloge (`.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`, Name `sae-l-skills`). Installation in Claude Code: `/plugin install pdf-seitenweise-sichten --marketplace Sae-l/pdf-seitenweise-sichten`. Das Paket wird mit `scripts/plugin_paket.py` aus den Quelldateien erzeugt; die CI prüft den Gleichstand.
+- `AGENTS.md` (mit `CLAUDE.md`-Verweis): Installations- und Arbeitsanleitung für KI-Agenten.
+- `scripts/pruefsummen.py [--fix]` prüft und erneuert `SHA256SUMS` und `skill_sha256`.
+- `.gitignore` schützt vor versehentlichem Einchecken von Kursunterlagen, Sichtungen und lokalen Werkzeugdaten.
 - Silbentrennung am Zeilenende liefert pdfium als `U+FFFE` (`Code￾zeile`). `extract` entfernt das Zeichen jetzt; `search` ignoriert es auch in bestehenden Sichtungen. Bisher fand die Suche solche Wörter nicht (in einem Kursbestand 213 Stellen, z. B. „Codezeile“, „Fehlerzähler“). Bestehende Markdown-Dateien behalten das Zeichen bis zur Neuextraktion; `read` gibt es dort weiter aus. Regressionstest ergänzt.
 - Steht `U+FFFE` vor einem Großbuchstaben, war es ein echter Bindestrich am Zeilenende; `extract` und `search` setzen dort jetzt `-` (`Commit-Nachricht` statt `CommitNachricht`). Kleinschreibung danach gilt weiter als Silbentrennung.
 - Ein Lösungskapitel im Inhaltsverzeichnis (Zeile „Lösungen“ auf einer Seite mit „Inhalt“/„Inhaltsverzeichnis“) setzt keinen Lösungsbeginn mehr. Bisher blendete es den gesamten restlichen Text aus, und die Suche meldete stillschweigend keine Treffer. Bestehende Sichtungen solcher PDFs meldet `check` als „Endantwortenbeginn stimmt nicht; neu extrahieren“; neu in einen eigenen Ordner extrahieren, mit `--alt` bleibt der Prüfstatus erhalten.

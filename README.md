@@ -59,7 +59,15 @@ Die Originale bleiben erhalten. PDFs werden direkt im angegebenen Quellordner ge
 
 ## Mit deinem Agenten nutzen
 
-Installiere den Skill aus dem geklonten Repository in ein **bereits vorhandenes Zielprojekt**:
+Als Plugin aus diesem Repository (Python mit `pypdfium2` und `Pillow` muss lokal vorhanden sein):
+
+```text
+/plugin install pdf-seitenweise-sichten --marketplace Sae-l/pdf-seitenweise-sichten
+```
+
+Das ist der Befehl für Claude Code. Für Codex lautet er `codex plugin marketplace add Sae-l/pdf-seitenweise-sichten`, danach `codex plugin add pdf-seitenweise-sichten@sae-l-skills`. Cursor und VS Code/Copilot lesen den Skill aus der Projektkopie unten. Ein Agent kann die Einrichtung selbst übernehmen: [Anleitung für Agenten](AGENTS.md#installation-für-nutzer).
+
+Alternativ installierst du den Skill aus dem geklonten Repository in ein **bereits vorhandenes Zielprojekt**:
 
 ```sh
 python scripts/install_projekt.py "../Mein-Projekt"

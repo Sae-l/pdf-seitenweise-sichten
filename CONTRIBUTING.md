@@ -32,6 +32,6 @@ python Obsidian-Plan/Pruefung/vault_pruefen.py
 
 Gesperrte lokale Plattformtests ausdrücklich als übersprungen melden. Sicherheitsrichtlinien nicht umgehen; die Pflicht-CI muss alle Plattformfälle ohne Skips ausführen. Eine technische Prüfung bestätigt keine mathematische Richtigkeit oder vollständige Agent-Kompatibilität.
 
-Bei Änderungen die betroffenen Einträge in `SHA256SUMS` erneuern. Ändert sich `SKILL.md`, zusätzlich `skill_sha256` in `ARCHIVE.json` aktualisieren. Bei absichtlichen Vault-Änderungen dessen Manifest über `vault_pruefen.py --write` erneuern. Prüfsummen dokumentieren den Stand; sie ersetzen den Review nicht.
+Nach Änderungen an `SKILL.md`, `scripts/`, `references/` oder `ARCHIVE.json` das Plugin-Paket mit `python scripts/plugin_paket.py` neu erzeugen. Danach `python scripts/pruefsummen.py --fix` ausführen; das erneuert `SHA256SUMS` und `skill_sha256` in `ARCHIVE.json`. Bei absichtlichen Vault-Änderungen dessen Manifest über `vault_pruefen.py --write` erneuern. Prüfsummen dokumentieren den Stand; sie ersetzen den Review nicht.
 
 Der Pull Request beschreibt Problem, resultierendes Verhalten, ausgeführte Prüfungen und offene Grenzen. Die Windows-/Linux-Pflichtprüfungen müssen vor dem Merge bestehen. Details zum Release-Weg stehen in der [Repository-Konfiguration](docs/repository-konfiguration.md).

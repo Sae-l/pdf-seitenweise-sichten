@@ -1,0 +1,14 @@
+{
+  "name": "sae-l-skills",
+  "description": "Skills von Sae-l für Studium und Quellenarbeit",
+  "owner": {
+    "name": "Sae-l"
+  },
+  "plugins": [
+    {
+      "name": "pdf-seitenweise-sichten",
+      "source": "./plugins/pdf-seitenweise-sichten",
+      "description": "Lokale PDFs tokensparsam seitenweise sichten: Seitenindex, Markdown je Seite, gezielte Originalseiten."
+    }
+  ]
+}
