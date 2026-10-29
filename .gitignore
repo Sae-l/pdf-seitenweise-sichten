@@ -5,6 +5,7 @@ Test/
 
 # Lokale Werkzeuge und Laufzeitdateien
 .agentic-qe/
+.claude-flow/
 .claude/worktrees/
 .claude/settings.local.json
 __pycache__/
