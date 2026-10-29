@@ -37,7 +37,9 @@ Das Repository ist selbst ein Marketplace (`sae-l-skills`) mit dem Plugin `pdf-s
 
 Der Plugin-Inhalt liegt in `plugins/pdf-seitenweise-sichten/`. Er wird mit `python scripts/plugin_paket.py` aus `SKILL.md`, `scripts/` und `references/` erzeugt und nie von Hand bearbeitet. Updates erhalten Nutzer mit einer neuen Version in `ARCHIVE.json` (`/plugin update` bzw. `codex plugin marketplace upgrade`). ChatGPT im Browser und claude.ai haben keinen Zugriff auf lokale Laufwerke. Dort hilft das Plugin nur bei hochgeladenen Dateien und einer Python-Umgebung mit `pypdfium2`.
 
-Getestet am 29.10.2026 mit Claude Code 2.1.300 und Codex CLI 0.163.0, jeweils in leeren Konfigurationsordnern: `claude plugin validate --strict` bestanden, Installation erfolgreich, `sichtung.py` aus dem Plugin-Cache lauffähig.
+Getestet am 29.10.2026 mit Claude Code 2.1.300 und Codex CLI 0.163.0, jeweils in leeren Konfigurationsordnern: `claude plugin validate --strict` bestanden, Installation erfolgreich, `sichtung.py` aus dem Plugin-Cache lauffähig. Installation direkt von GitHub ebenfalls erfolgreich.
+
+**Windows: `Filename too long`.** Bricht das Hinzufügen des Marketplace mit `fatal: cannot create directory … Filename too long` ab, ist der Pfad länger als die Windows-Grenze von 260 Zeichen. Das betrifft lange Benutzernamen oder OneDrive-Profile, denn Pfade im Repository haben bis zu 93 Zeichen. Abhilfe: `git config --global core.longpaths true`, dann den Befehl wiederholen.
 
 ## Portable Projektinstallation
 
