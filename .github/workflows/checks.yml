@@ -27,6 +27,8 @@ jobs:
         run: python scripts/selbsttest.py
       - name: Projektpakete und native Installer prüfen
         run: python scripts/plattformtest.py
+      - name: Plugin-Paket prüfen
+        run: python scripts/plugin_paket.py --check
       - name: Plan und Nachweise prüfen
         run: python Obsidian-Plan/Pruefung/vault_pruefen.py
       - name: Python-Syntax und Dateiintegrität prüfen

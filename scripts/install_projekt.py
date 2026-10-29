@@ -25,12 +25,17 @@ def install(project):
         if target.exists() or target.is_symlink() or target.is_junction():
             raise FileExistsError(f"Ziel bleibt unverändert: {target}. Für ein Update erst vergleichen und sichern.")
     for target in targets:
-        target.mkdir(parents=True)
-        for name in ("SKILL.md", "LICENSE", "ARCHIVE.json"):
-            shutil.copy2(ROOT / name, target / name)
-        for name in ("scripts", "references"):
-            shutil.copytree(ROOT / name, target / name, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+        kopiere_skill(target)
         print(f"installiert: {target}")
+
+
+def kopiere_skill(target):
+    """Vollständige Skill-Kopie; auch Quelle des Plugin-Pakets (plugin_paket.py)."""
+    target.mkdir(parents=True)
+    for name in ("SKILL.md", "LICENSE", "ARCHIVE.json"):
+        shutil.copy2(ROOT / name, target / name)
+    for name in ("scripts", "references"):
+        shutil.copytree(ROOT / name, target / name, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
 
 
 if __name__ == "__main__":

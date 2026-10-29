@@ -1,0 +1,11 @@
+# Lehrmaterialien und erzeugte Sichtungen: urheberrechtlich geschützt bzw. lokal
+references/TestOrdner/
+Test/
+*_Sichtung*/
+
+# Lokale Werkzeuge und Laufzeitdateien
+.agentic-qe/
+.claude/worktrees/
+.claude/settings.local.json
+__pycache__/
+*.pyc
