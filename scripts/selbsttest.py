@@ -319,4 +319,18 @@ with tempfile.TemporaryDirectory() as tmp:
     toc_doc = json.loads((toc_out / "manifest.json").read_text(encoding="utf-8"))[0]
     assert toc_doc["answer_start_page"] == 4
 
+    # pdfium liefert Silbentrennung am Zeilenende als U+FFFE; getrennte Wörter müssen auffindbar bleiben.
+    trenn_source = tmp / "trennung"
+    trenn_source.mkdir()
+    c = canvas.Canvas(str(trenn_source / "Trennung.pdf"))
+    c.drawString(72, 760, "welche einzelne Code-")
+    c.drawString(72, 740, "zeile fehlt")
+    c.showPage()
+    c.save()
+    trenn_out = tmp / "trennsichtung"
+    r = lauf("extract", trenn_source, trenn_out)
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "￾" not in (trenn_out / "md" / "Trennung.md").read_text(encoding="utf-8"), "U+FFFE im Markdown"
+    assert json.loads(lauf("search", trenn_out, "Codezeile").stdout)["gesamt"] == 1, "getrenntes Wort nicht gefunden"
+
 print("Selbsttest bestanden")

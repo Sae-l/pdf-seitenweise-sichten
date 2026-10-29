@@ -2,6 +2,7 @@
 
 ## Unveröffentlicht
 
+- Silbentrennung am Zeilenende liefert pdfium als `U+FFFE` (`Code￾zeile`). `extract` entfernt das Zeichen jetzt; `search` ignoriert es auch in bestehenden Sichtungen. Bisher fand die Suche solche Wörter nicht (in einem Kursbestand 213 Stellen, z. B. „Codezeile“, „Fehlerzähler“). Bestehende Markdown-Dateien behalten das Zeichen bis zur Neuextraktion; `read` gibt es dort weiter aus. Regressionstest ergänzt.
 - Ein Lösungskapitel im Inhaltsverzeichnis (Zeile „Lösungen“ auf einer Seite mit „Inhalt“/„Inhaltsverzeichnis“) setzt keinen Lösungsbeginn mehr. Bisher blendete es den gesamten restlichen Text aus, und die Suche meldete stillschweigend keine Treffer. Bestehende Sichtungen solcher PDFs meldet `check` als „Endantwortenbeginn stimmt nicht; neu extrahieren“; neu in einen eigenen Ordner extrahieren, mit `--alt` bleibt der Prüfstatus erhalten.
 - `search` gibt `seiten_ausgeblendet` aus: die Zahl der wegen Lösungsschutz nicht durchsuchten Seiten. Ein leeres Ergebnis bei Wert über 0 ist kein Nachweis für fehlenden Inhalt.
 - Regressionstests für beide Fälle ergänzt.
