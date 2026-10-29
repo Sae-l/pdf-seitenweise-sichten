@@ -32,6 +32,16 @@ def trennung(text):
     # sonst Silbentrennung (Code-zeile). shortcut: Kleinschreibung nach echtem Bindestrich („E-mail“) verliert den Strich,
     # bei Bedarf auf Glyphenabstände umstellen.
     return re.sub("\ufffe(?=[A-ZÄÖÜ])", "-", text).replace("\ufffe", "")
+
+
+def quellverweis(source, md_ordner):
+    # Unter Windows gibt es keinen relativen Pfad zwischen Laufwerken (PDFs auf D:, Ausgabe auf C:); check liest beides.
+    try:
+        return Path(os.path.relpath(source, md_ordner)).as_posix()
+    except ValueError:
+        return Path(source).resolve().as_posix()
+
+
 INHALT = re.compile(r"(?im)^[ \t]*(?:Inhaltsverzeichnis|Inhalt|Contents|Table of Contents)[ \t]*:?[ \t]*$")
 
 
@@ -182,7 +192,7 @@ def extract(quelle, ziel, alt_ordner=None, ueberschrift=None):
         # Zeilen auf mindestens der Hälfte der Seiten sind Kopf-/Fußzeilen und taugen nicht als Titel.
         zaehler = collections.Counter(z for t in texte for z in {l.strip() for l in t.splitlines() if l.strip()})
         wiederholt = {z for z, c in zaehler.items() if len(texte) >= 4 and c >= len(texte) / 2}
-        relative_source = Path(os.path.relpath(source, ziel / "md")).as_posix()
+        relative_source = quellverweis(source, ziel / "md")
         extracted = [f"# {source.stem}", "", f"Quelle: {relative_source}",
                      "Die Seitenzahlen unten sind PDF-Seiten, keine behaupteten Foliennummern.", ""]
         index += [f"## {source.stem} ({len(document)} PDF-Seiten)",

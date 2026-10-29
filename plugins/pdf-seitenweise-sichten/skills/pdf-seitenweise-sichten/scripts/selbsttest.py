@@ -336,4 +336,10 @@ with tempfile.TemporaryDirectory() as tmp:
     from sichtung import trennung
     assert trennung("Verarbei\ufffetung der Commit\ufffeNachricht") == "Verarbeitung der Commit-Nachricht"
 
+    from sichtung import quellverweis
+    assert quellverweis(tmp / "quelle" / "Test.pdf", tmp / "out" / "md") == "../../quelle/Test.pdf"
+    if sys.platform == "win32":  # Quelle und Ausgabe auf verschiedenen Laufwerken: absoluter Verweis statt Abbruch
+        assert quellverweis(Path("D:/Kurs/Test.pdf"), Path("C:/Sichtung/md")) == "D:/Kurs/Test.pdf"
+        assert (Path("C:/Sichtung/md") / "D:/Kurs/Test.pdf").resolve() == Path("D:/Kurs/Test.pdf").resolve()
+
 print("Selbsttest bestanden")
