@@ -1,6 +1,6 @@
 {
   "name": "pdf-seitenweise-sichten",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Token-sparing page-by-page review of local PDFs (lecture slides, exercise sheets, formula collections): page index, per-page Markdown, targeted original-page rendering. PDF-Unterlagen tokensparsam seitenweise sichten.",
   "author": {
     "name": "Sae-l"

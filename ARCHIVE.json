@@ -1,6 +1,6 @@
 {
   "name": "pdf-seitenweise-sichten",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "date": "2026-10-29",
   "owner": "Sae-l",
   "source": "Installed Codex skill, created in the Formelsammlung project",
@@ -16,6 +16,7 @@
     "real_document_test_current_worktree": "PASS (2026-10-24; fresh MPG1 27 PDFs/218 pages, four group checks, five fixed search tasks, source hashes unchanged; docs/umsetzung-pdf-werkzeug-2026-10-24.md)",
     "platform_provisioning": "PARTIAL locally (2026-10-29; 5/7 tests PASS including ignored-file regression; 2 skipped by Windows execution policy; CI on Windows and Linux runs all 7 and rejects skipped tests)",
     "plugin_install": "PASS (2026-10-29; claude plugin validate --strict for plugin and marketplace; isolated installs in Claude Code 2.1.300 and Codex 0.163.0 from local checkout and GitHub; sichtung.py --help from both caches)",
+    "cross_drive_extract": "PASS (2026-10-29; Windows, 7 course PDFs on D: extracted to C:; check OK; search, read, render OK; source folder unchanged)",
     "real_document_test_cud_2026_10_29": "PASS (CuD course 6 groups regenerated after hyphenation fix; check OK; 0 U+FFFE; search finds Codezeile, Fehlerzaehler, Commit-Nachricht)",
     "native_agent_acceptance": "PARTIAL (Codex Desktop manual and Claude Code 2.1.300 read-only synthetic smoke tests; full five-agent acceptance remains open; docs/plattformabnahme-v1.4.0.md)",
     "observed_workflow_1_4_0": "P2 PDF page 9 and eight selected pages in five example documents",

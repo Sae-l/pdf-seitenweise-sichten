@@ -7,7 +7,7 @@ Ein lokales Python-Werkzeug und Agent-Skill für Vorlesungsfolien, Übungsblätt
 ![Vom kompakten Seitenindex zum relevanten Text und zur Prüfung an der Originalseite.](docs/assets/ablauf.svg)
 
 <p align="center">
-  <a href="https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.6.0"><strong>v1.6.0 herunterladen</strong></a> ·
+  <a href="https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.6.1"><strong>v1.6.1 herunterladen</strong></a> ·
   <a href="#schnellstart">Schnellstart</a> ·
   <a href="references/gezielte-nutzung.md">Nutzungsbeispiele</a> ·
   <a href="#prüfstand">Prüfnachweise</a>
@@ -33,7 +33,7 @@ Ein lokales Python-Werkzeug und Agent-Skill für Vorlesungsfolien, Übungsblätt
 Du brauchst **Python 3.12 oder neuer** und Git. Unter macOS/Linux gegebenenfalls `python3` verwenden.
 
 ```sh
-git clone --branch v1.6.0 --depth 1 https://github.com/Sae-l/pdf-seitenweise-sichten.git
+git clone --branch v1.6.1 --depth 1 https://github.com/Sae-l/pdf-seitenweise-sichten.git
 cd pdf-seitenweise-sichten
 python -m pip install -r scripts/requirements.txt
 ```
@@ -122,7 +122,7 @@ Das Python-Werkzeug verarbeitet lokal. Welche Inhalte ein KI-Agent an seinen Anb
 | [Installation und Updates](docs/installation.md) | Passender Weg für Projekt, ZIP, globale Verknüpfungen und Cloud |
 | [Nutzungsbeispiele](references/gezielte-nutzung.md) | Suche, Seitenlesen, Bilder und Arbeitsfassungen |
 | [Skill-Anweisung](SKILL.md) | Verbindlicher Ablauf für Agenten |
-| [Änderungen](CHANGELOG.md) · [Release-Hinweise](docs/releases/v1.6.0.md) | Neuerungen und Versionsgrenzen |
+| [Änderungen](CHANGELOG.md) · [Release-Hinweise](docs/releases/v1.6.1.md) | Neuerungen und Versionsgrenzen |
 | [Plan und Nachweise](Obsidian-Plan/00%20Start.md) | Entscheidungen, frühere Messungen und offene Schritte |
 | [Mitwirken](CONTRIBUTING.md) | Fehler melden und Änderungen nachvollziehbar prüfen |
 
