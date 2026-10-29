@@ -11,6 +11,7 @@ Wenn ein Nutzer dich bittet, das Werkzeug einzurichten:
    - **Claude Code:** `/plugin install pdf-seitenweise-sichten --marketplace Sae-l/pdf-seitenweise-sichten`
    - **Codex:** `codex plugin marketplace add Sae-l/pdf-seitenweise-sichten` und `codex plugin add pdf-seitenweise-sichten@sae-l-skills`, danach neue Sitzung
    - **Cursor, VS Code/Copilot oder ein bestimmtes Projekt:** Repository klonen, dann `python scripts/install_projekt.py "<vorhandener-projektordner>"`
+   Meldet Windows `Filename too long`, den Nutzer fragen, ob `git config --global core.longpaths true` gesetzt werden darf, und dann wiederholen.
 3. Prüfen: `python <skill-ordner>/scripts/sichtung.py --help` muss die Befehle `extract`, `check`, `search`, `read`, `render`, `save` zeigen.
 4. Erste Nutzung: `extract <pdf-ordner> <neuer-ausgabeordner>`, danach `search` und `read` wie in SKILL.md. Ausgabeordner nie in den PDF-Ordner legen und nie überschreiben.
 
