@@ -9,7 +9,7 @@
 | Als Plugin in Claude Code oder Codex | [Plugin-Marketplace](#plugin-marketplace) dieses Repositorys hinzufügen |
 | Das Werkzeug ohne Agenten nutzen | Repository klonen, Python-Abhängigkeiten bereitstellen, CLI verwenden |
 | Den Skill in einem Projekt nutzen | Portable Projektkopien mit `install_projekt.py` erzeugen |
-| Einen festen Stand ohne Git herunterladen | Skill-ZIP aus dem [Release v1.5.0](https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.5.0) entpacken |
+| Einen festen Stand ohne Git herunterladen | Skill-ZIP aus dem [Release v1.6.0](https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.6.0) entpacken |
 | Einen Klon für mehrere lokale Agenten verwenden | Globale Verknüpfungen aus dem vollständigen Repository einrichten |
 | GitHub Copilot Cloud verwenden | Skill-Dateien und geeignete Quellen im Zielrepository bereitstellen |
 
@@ -18,7 +18,7 @@
 Python 3.12 oder neuer; für den Klon zusätzlich Git. Benötigte Pakete stehen in `scripts/requirements.txt`: `pypdfium2` und `Pillow`. Ein vorhandenes virtuelles Python-Environment kann genutzt werden. `reportlab` ist nur für Tests erforderlich.
 
 ```sh
-git clone --branch v1.5.0 --depth 1 https://github.com/Sae-l/pdf-seitenweise-sichten.git
+git clone --branch v1.6.0 --depth 1 https://github.com/Sae-l/pdf-seitenweise-sichten.git
 cd pdf-seitenweise-sichten
 python -m pip install -r scripts/requirements.txt
 ```
@@ -61,7 +61,7 @@ Den Skill im jeweiligen Agenten aktivieren. Für Codex ist `$pdf-seitenweise-sic
 Lade das Skill-ZIP und `SHA256SUMS` von derselben Release-Seite herunter und vergleiche den ZIP-Hash. Beispielsweise mit PowerShell:
 
 ```powershell
-Get-FileHash -Algorithm SHA256 -LiteralPath .\pdf-seitenweise-sichten-v1.5.0.zip
+Get-FileHash -Algorithm SHA256 -LiteralPath .\pdf-seitenweise-sichten-v1.6.0.zip
 ```
 
 Nach dem Entpacken im enthaltenen Skill-Ordner die Python-Abhängigkeiten bereitstellen und bei Bedarf `scripts/install_projekt.py` ausführen. Das ZIP enthält `SKILL.md`, `LICENSE`, `ARCHIVE.json`, `scripts/` und `references/`. README, globale Installer und Plan-Vault gehören zum vollständigen Repository. Die vollständigen Plattformtests deshalb aus dem Repository ausführen.
@@ -79,7 +79,7 @@ Die Skripte verknüpfen den Klon mit `.claude/skills/`, `.agents/skills/`, `.gem
 
 Blockiert Windows `.ps1`, die portable Python-Projektinstallation verwenden. Dafür keine Ausführungsrichtlinie ändern. Ältere Kopien unter `.codex/skills/` separat vergleichen, damit nicht unbeabsichtigt ein alter Stand geladen wird.
 
-Ein fest auf `v1.5.0` ausgecheckter Klon bleibt bei diesem Stand. Wer bewusst den Entwicklungszweig nutzt, kann verknüpfte Installationen über dessen Updates gemeinsam aktualisieren; vorher Änderungen und Prüfnachweise vergleichen.
+Ein fest auf `v1.6.0` ausgecheckter Klon bleibt bei diesem Stand. Wer bewusst den Entwicklungszweig nutzt, kann verknüpfte Installationen über dessen Updates gemeinsam aktualisieren; vorher Änderungen und Prüfnachweise vergleichen.
 
 ## GitHub Copilot Cloud
 

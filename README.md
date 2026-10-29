@@ -7,7 +7,7 @@ Ein lokales Python-Werkzeug und Agent-Skill für Vorlesungsfolien, Übungsblätt
 ![Vom kompakten Seitenindex zum relevanten Text und zur Prüfung an der Originalseite.](docs/assets/ablauf.svg)
 
 <p align="center">
-  <a href="https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.5.0"><strong>v1.5.0 herunterladen</strong></a> ·
+  <a href="https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.6.0"><strong>v1.6.0 herunterladen</strong></a> ·
   <a href="#schnellstart">Schnellstart</a> ·
   <a href="references/gezielte-nutzung.md">Nutzungsbeispiele</a> ·
   <a href="#prüfstand">Prüfnachweise</a>
@@ -33,7 +33,7 @@ Ein lokales Python-Werkzeug und Agent-Skill für Vorlesungsfolien, Übungsblätt
 Du brauchst **Python 3.12 oder neuer** und Git. Unter macOS/Linux gegebenenfalls `python3` verwenden.
 
 ```sh
-git clone --branch v1.5.0 --depth 1 https://github.com/Sae-l/pdf-seitenweise-sichten.git
+git clone --branch v1.6.0 --depth 1 https://github.com/Sae-l/pdf-seitenweise-sichten.git
 cd pdf-seitenweise-sichten
 python -m pip install -r scripts/requirements.txt
 ```
@@ -65,7 +65,7 @@ Als Plugin aus diesem Repository (Python mit `pypdfium2` und `Pillow` muss lokal
 /plugin install pdf-seitenweise-sichten --marketplace Sae-l/pdf-seitenweise-sichten
 ```
 
-Das ist der Befehl für Claude Code. Für Codex lautet er `codex plugin marketplace add Sae-l/pdf-seitenweise-sichten`, danach `codex plugin add pdf-seitenweise-sichten@sae-l-skills`. Cursor und VS Code/Copilot lesen den Skill aus der Projektkopie unten. Ein Agent kann die Einrichtung selbst übernehmen: [Anleitung für Agenten](AGENTS.md#installation-für-nutzer).
+Das ist der Befehl für Claude Code. Für Codex lautet er `codex plugin marketplace add Sae-l/pdf-seitenweise-sichten`, danach `codex plugin add pdf-seitenweise-sichten@sae-l-skills`. Cursor und VS Code/Copilot lesen den Skill aus der Projektkopie unten. Ein Agent kann die Einrichtung selbst übernehmen: [Anleitung für Agenten](AGENTS.md#installation-für-nutzer). Der Ordner [`plugins/`](plugins/pdf-seitenweise-sichten) ist die daraus erzeugte Plugin-Kopie von `SKILL.md`, `scripts/` und `references/`; geändert wird nur an der Quelle.
 
 Alternativ installierst du den Skill aus dem geklonten Repository in ein **bereits vorhandenes Zielprojekt**:
 
@@ -103,7 +103,7 @@ Die [Nutzungsbeispiele](references/gezielte-nutzung.md) zeigen den vollständige
 
 ## Prüfstand
 
-- **Automatisierte Technik:** Selbsttest, portable Installation, Vault, Syntax und Prüfsummen werden auf Windows und Linux geprüft. [GitHub Actions](https://github.com/Sae-l/pdf-seitenweise-sichten/actions/workflows/checks.yml)
+- **Automatisierte Technik:** Selbsttest, portable Installation, Plugin-Paket, Vault, Syntax und Prüfsummen werden auf Windows und Linux geprüft. [GitHub Actions](https://github.com/Sae-l/pdf-seitenweise-sichten/actions/workflows/checks.yml)
 - **Reale Unterlagen:** 27 MPG1-PDFs mit 218 Seiten neu extrahiert und geprüft; fünf festgelegte Suchfälle, zwei tatsächlich betrachtete Originalseiten und eine wiederverwendete Formel-Arbeitsfassung. [Messung und Grenzen](docs/umsetzung-pdf-werkzeug-2026-10-24.md)
 - **Paketintegrität:** Das Release enthält das Skill-ZIP und dessen SHA-256-Datei. Die [Repository-Prüfsummen](SHA256SUMS) betreffen dagegen die aufgeführten Quelldateien.
 
@@ -122,7 +122,7 @@ Das Python-Werkzeug verarbeitet lokal. Welche Inhalte ein KI-Agent an seinen Anb
 | [Installation und Updates](docs/installation.md) | Passender Weg für Projekt, ZIP, globale Verknüpfungen und Cloud |
 | [Nutzungsbeispiele](references/gezielte-nutzung.md) | Suche, Seitenlesen, Bilder und Arbeitsfassungen |
 | [Skill-Anweisung](SKILL.md) | Verbindlicher Ablauf für Agenten |
-| [Änderungen](CHANGELOG.md) · [Release-Hinweise](docs/releases/v1.5.0.md) | Neuerungen und Versionsgrenzen |
+| [Änderungen](CHANGELOG.md) · [Release-Hinweise](docs/releases/v1.6.0.md) | Neuerungen und Versionsgrenzen |
 | [Plan und Nachweise](Obsidian-Plan/00%20Start.md) | Entscheidungen, frühere Messungen und offene Schritte |
 | [Mitwirken](CONTRIBUTING.md) | Fehler melden und Änderungen nachvollziehbar prüfen |
 

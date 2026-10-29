@@ -1,5 +1,7 @@
 # Plan: tokensparsame, belegbare PDF-Nutzung
 
+> **Historischer Nachweis.** Aktueller Stand und Installation: [README](../README.md).
+
 Stand: 24.10.2026. Planungsentwurf auf Grundlage des lokalen Reviews vom 23.10.2026. Noch keine Implementierung und keine neue Abnahme.
 
 ## Ziel und Entscheidung
