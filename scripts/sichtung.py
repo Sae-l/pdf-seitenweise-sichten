@@ -170,7 +170,8 @@ def extract(quelle, ziel, alt_ordner=None, ueberschrift=None):
         texte = []
         for number in range(1, len(document) + 1):
             textpage = document[number - 1].get_textpage()
-            texte.append(textpage.get_text_range().replace("\r\n", "\n").replace("\r", "\n"))
+            # pdfium markiert Silbentrennung am Zeilenende mit U+FFFE; entfernen, sonst findet die Suche getrennte Wörter nicht.
+            texte.append(textpage.get_text_range().replace("\r\n", "\n").replace("\r", "\n").replace("￾", ""))
             textpage.close()
         # Zeilen auf mindestens der Hälfte der Seiten sind Kopf-/Fußzeilen und taugen nicht als Titel.
         zaehler = collections.Counter(z for t in texte for z in {l.strip() for l in t.splitlines() if l.strip()})
@@ -372,7 +373,8 @@ def suche(ordner, suchtext, limit=5, offset=0, mit_antworten=False):
             if "duplicate_of" in doc:
                 continue
             for number, raw in seitenabschnitte(ausgabepfad(group, doc["markdown"]).read_text(encoding="utf-8")):
-                text, verborgen = aufgabentext(raw, number, doc.get("answer_start_page"))
+                # Altbestände enthalten noch U+FFFE aus der Silbentrennung.
+                text, verborgen = aufgabentext(raw.replace("￾", ""), number, doc.get("answer_start_page"))
                 if mit_antworten:
                     text = raw
                 ausgeblendet += int(verborgen and not mit_antworten)
