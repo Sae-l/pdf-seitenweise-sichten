@@ -64,6 +64,25 @@ class Installationstest(unittest.TestCase):
                 self.assertTrue((output / "Seitenindex.md").is_file())
                 self.assertTrue((self.work / (folder + "_bilder") / "Mechanik-S001.png").is_file())
 
+    def test_project_copy_skips_ignored_course_material(self):
+        repo = self.work / "Quellrepo"
+        for name in ("SKILL.md", "LICENSE", "ARCHIVE.json", "scripts/install_projekt.py", "references/gezielte-nutzung.md"):
+            (repo / name).parent.mkdir(parents=True, exist_ok=True)
+            (repo / name).write_bytes((ROOT / name).read_bytes())
+        (repo / ".gitignore").write_text("references/TestOrdner/\n", encoding="utf-8")
+        subprocess.run(["git", "init", "-q", str(repo)], check=True)
+        (repo / "references/TestOrdner").mkdir()
+        (repo / "references/TestOrdner/Kurs.pdf").write_bytes(b"%PDF urheberrechtlich")
+        (repo / "references/neu.md").write_text("noch nicht eingecheckt", encoding="utf-8")
+        project = self.work / "Projekt"
+        project.mkdir()
+        result = self.run_python(repo / "scripts/install_projekt.py", project)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        installed = project / ".claude/skills" / NAME
+        self.assertFalse((installed / "references/TestOrdner").exists())
+        self.assertTrue((installed / "references/neu.md").is_file())
+        self.assertTrue((installed / "references/gezielte-nutzung.md").is_file())
+
     def test_project_conflict_preserves_existing_data(self):
         existing = self.work / ".agents/skills" / NAME
         existing.mkdir(parents=True)

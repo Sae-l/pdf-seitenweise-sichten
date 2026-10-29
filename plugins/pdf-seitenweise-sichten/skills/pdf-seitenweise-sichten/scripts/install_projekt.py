@@ -9,6 +9,7 @@ Bestehende Ziele bleiben unverändert. Original-PDFs werden nicht kopiert.
 import argparse
 from pathlib import Path
 import shutil
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 NAME = "pdf-seitenweise-sichten"
@@ -34,8 +35,26 @@ def kopiere_skill(target):
     target.mkdir(parents=True)
     for name in ("SKILL.md", "LICENSE", "ARCHIVE.json"):
         shutil.copy2(ROOT / name, target / name)
-    for name in ("scripts", "references"):
-        shutil.copytree(ROOT / name, target / name, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    dateien = git_dateien("scripts", "references")
+    if dateien is None:
+        for name in ("scripts", "references"):
+            shutil.copytree(ROOT / name, target / name, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+        return
+    for name in dateien:
+        (target / name).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(ROOT / name, target / name)
+
+
+def git_dateien(*ordner):
+    """Dateien ohne .gitignore-Treffer (z. B. lokale Kursunterlagen in references/); None außerhalb eines Git-Repos."""
+    # shortcut: ohne Git (ZIP-Download) wird alles kopiert; dann references/ vorher frei von eigenen Dateien halten.
+    try:
+        result = subprocess.run(["git", "-C", str(ROOT), "ls-files", "-z", "--cached", "--others",
+                                 "--exclude-standard", "--", *ordner], capture_output=True, check=True)
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    namen = [name for name in result.stdout.decode("utf-8").split("\0") if name]
+    return [name for name in namen if (ROOT / name).is_file() and "__pycache__" not in name and not name.endswith(".pyc")]
 
 
 if __name__ == "__main__":
