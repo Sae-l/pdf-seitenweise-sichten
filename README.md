@@ -1,5 +1,7 @@
 # PDF-Unterlagen gezielt sichten
 
+**Deutsch** · [English](README.en.md)
+
 **Die passende Seite finden. Text und Bilder prüfen. Inhalte mit Quellen weiterverwenden.**
 
 Ein lokales Python-Werkzeug und Agent-Skill für Vorlesungsfolien, Übungsblätter und Formelsammlungen. Für alle, die aus umfangreichen PDFs gezielt Wissen erschließen möchten, ohne jedes Mal das ganze Dokument in den KI-Kontext zu laden.
