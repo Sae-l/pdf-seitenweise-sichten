@@ -1,5 +1,7 @@
 # Plattformprüfung v1.4.0
 
+> **Historischer Nachweis.** Aktueller Stand und Installation: [README](../README.md).
+
 Prüfdatum: 23.10.2026. Die technische Paketprüfung und die Abnahme des Agent-Verhaltens sind getrennte Nachweise. **Eine vollständige Endabnahme aller fünf Agenten liegt noch nicht vor.**
 
 ## Fehlerkorrekturen

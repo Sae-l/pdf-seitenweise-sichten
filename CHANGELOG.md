@@ -2,6 +2,8 @@
 
 ## Unveröffentlicht
 
+## 1.6.0 — 2026-10-29
+
 - Behoben: `install_projekt.py` und `plugin_paket.py` kopierten aus `scripts/` und `references/` auch von `.gitignore` erfasste lokale Dateien (z. B. Kursunterlagen in `references/TestOrdner/`). In einem Git-Repository werden jetzt nur nicht ignorierte Dateien übernommen.
 - Plugin-Paket `plugins/pdf-seitenweise-sichten/` für Claude Code und Codex/ChatGPT sowie Marketplace-Kataloge (`.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`, Name `sae-l-skills`). Installation in Claude Code: `/plugin install pdf-seitenweise-sichten --marketplace Sae-l/pdf-seitenweise-sichten`. Das Paket wird mit `scripts/plugin_paket.py` aus den Quelldateien erzeugt; die CI prüft den Gleichstand.
 - `AGENTS.md` (mit `CLAUDE.md`-Verweis): Installations- und Arbeitsanleitung für KI-Agenten.

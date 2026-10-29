@@ -1,5 +1,7 @@
 # Umsetzungsnachweis: gezielte PDF-Nutzung
 
+> **Historischer Nachweis.** Aktueller Stand und Installation: [README](../README.md).
+
 Stand: 24.10.2026, lokaler Entwicklungsstand `1.5.0-dev`, unveröffentlicht. Grundlage: Review vom 23.10.2026 und Plan `docs/plan-pdf-werkzeug-2026-10-24.md`. Keine installierten Skill-Kopien verändert.
 
 ## Implementiert

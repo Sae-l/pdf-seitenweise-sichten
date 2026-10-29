@@ -4,15 +4,15 @@ description: "Einstieg in den Plan für pdf-seitenweise-sichten: Ziel, aktueller
 type: moc
 language: de
 created: 2026-10-22
-updated: 2026-10-26
+updated: 2026-10-29
 status: aktiv
 tags: ["pdf-sichtung", "moc"]
 ---
 
 # pdf-seitenweise-sichten – Plan und Nachweise
 
-> [!success] Aktueller Stand: v1.5.0
-> Gezielte Suche, einzelne Seiten lesen, Originalbilder prüfen und Arbeitsfassungen mit Quellenbezug wiederverwenden. [Release](https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.5.0) · [Installation](../docs/installation.md) · [Messung und offene Grenzen](../docs/umsetzung-pdf-werkzeug-2026-10-24.md).
+> [!success] Aktueller Stand: v1.6.0
+> Gezielte Suche, einzelne Seiten lesen, Originalbilder prüfen und Arbeitsfassungen mit Quellenbezug wiederverwenden. [Release](https://github.com/Sae-l/pdf-seitenweise-sichten/releases/tag/v1.6.0) · [Plugin](../README.md#mit-deinem-agenten-nutzen) · [Installation](../docs/installation.md) · [Messung und offene Grenzen](../docs/umsetzung-pdf-werkzeug-2026-10-24.md).
 
 **Zweck:** ein projektunabhängiger Skill, der PDF-Referenzen beliebiger Projekte einmal lokal in Rohtext, Seitenbilder und einen Index zerlegt, damit die KI pro Frage nur die passenden Stellen lädt. Details: [[10 Ziel und Erfolgskriterien]].
 
