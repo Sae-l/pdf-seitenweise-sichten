@@ -2,6 +2,8 @@
 
 ## Unveröffentlicht
 
+- Behoben: `extract` brach unter Windows ab, wenn PDFs und Ausgabeordner auf verschiedenen Laufwerken liegen (`path is on mount 'D:', start on mount 'C:'`). Der Quellenverweis im Markdown ist in diesem Fall absolut; `check` prüft ihn wie bisher.
+
 ## 1.6.0 — 2026-10-29
 
 - Behoben: `install_projekt.py` und `plugin_paket.py` kopierten aus `scripts/` und `references/` auch von `.gitignore` erfasste lokale Dateien (z. B. Kursunterlagen in `references/TestOrdner/`). In einem Git-Repository werden jetzt nur nicht ignorierte Dateien übernommen.
