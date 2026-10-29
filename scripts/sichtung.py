@@ -25,6 +25,13 @@ except ImportError:
 STATUS = dict(text_read=False, original_image_viewed=False, subject_review="offen")
 SEITENZAHL = re.compile(r"^(Seite \d+( von \d+)?|\d+( / \d+)?|©.*)$")
 ANTWORTEN = re.compile(r"(?im)^[ \t]*(?:Endantworten|Lösungen|Loesungen|Musterlösungen|Answers|Solutions)[ \t]*(?::|$)")
+
+
+def trennung(text):
+    # pdfium meldet Zeilenend-Trennstriche als U+FFFE; vor Großbuchstabe ist es ein echter Bindestrich (Commit-Nachricht),
+    # sonst Silbentrennung (Code-zeile). shortcut: Kleinschreibung nach echtem Bindestrich („E-mail“) verliert den Strich,
+    # bei Bedarf auf Glyphenabstände umstellen.
+    return re.sub("\ufffe(?=[A-ZÄÖÜ])", "-", text).replace("\ufffe", "")
 INHALT = re.compile(r"(?im)^[ \t]*(?:Inhaltsverzeichnis|Inhalt|Contents|Table of Contents)[ \t]*:?[ \t]*$")
 
 
@@ -170,8 +177,7 @@ def extract(quelle, ziel, alt_ordner=None, ueberschrift=None):
         texte = []
         for number in range(1, len(document) + 1):
             textpage = document[number - 1].get_textpage()
-            # pdfium markiert Silbentrennung am Zeilenende mit U+FFFE; entfernen, sonst findet die Suche getrennte Wörter nicht.
-            texte.append(textpage.get_text_range().replace("\r\n", "\n").replace("\r", "\n").replace("￾", ""))
+            texte.append(trennung(textpage.get_text_range().replace("\r\n", "\n").replace("\r", "\n")))
             textpage.close()
         # Zeilen auf mindestens der Hälfte der Seiten sind Kopf-/Fußzeilen und taugen nicht als Titel.
         zaehler = collections.Counter(z for t in texte for z in {l.strip() for l in t.splitlines() if l.strip()})
@@ -374,7 +380,7 @@ def suche(ordner, suchtext, limit=5, offset=0, mit_antworten=False):
                 continue
             for number, raw in seitenabschnitte(ausgabepfad(group, doc["markdown"]).read_text(encoding="utf-8")):
                 # Altbestände enthalten noch U+FFFE aus der Silbentrennung.
-                text, verborgen = aufgabentext(raw.replace("￾", ""), number, doc.get("answer_start_page"))
+                text, verborgen = aufgabentext(trennung(raw), number, doc.get("answer_start_page"))
                 if mit_antworten:
                     text = raw
                 ausgeblendet += int(verborgen and not mit_antworten)

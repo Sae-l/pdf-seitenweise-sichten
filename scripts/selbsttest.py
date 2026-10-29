@@ -330,7 +330,10 @@ with tempfile.TemporaryDirectory() as tmp:
     trenn_out = tmp / "trennsichtung"
     r = lauf("extract", trenn_source, trenn_out)
     assert r.returncode == 0, r.stdout + r.stderr
-    assert "￾" not in (trenn_out / "md" / "Trennung.md").read_text(encoding="utf-8"), "U+FFFE im Markdown"
+    assert "\ufffe" not in (trenn_out / "md" / "Trennung.md").read_text(encoding="utf-8"), "U+FFFE im Markdown"
     assert json.loads(lauf("search", trenn_out, "Codezeile").stdout)["gesamt"] == 1, "getrenntes Wort nicht gefunden"
+    sys.path.insert(0, str(SKRIPT.parent))
+    from sichtung import trennung
+    assert trennung("Verarbei\ufffetung der Commit\ufffeNachricht") == "Verarbeitung der Commit-Nachricht"
 
 print("Selbsttest bestanden")
