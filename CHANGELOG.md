@@ -2,6 +2,8 @@
 
 ## Unveröffentlicht
 
+- `README.en.md`: englische Projektübersicht mit Schnellstart, Agent-Installation, Befehlen, Prüfnachweisen und Grenzen; Sprachlinks in beiden READMEs.
+
 ## 1.6.1 — 2026-10-29
 
 - Behoben: `extract` brach unter Windows ab, wenn PDFs und Ausgabeordner auf verschiedenen Laufwerken liegen (`path is on mount 'D:', start on mount 'C:'`). Der Quellenverweis im Markdown ist in diesem Fall absolut; `check` prüft ihn wie bisher.
